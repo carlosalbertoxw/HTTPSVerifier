@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "HTTPS Verifier",
-  "version": "1.0.0",
-  "description": "Verifica que la página y enlaces, imágenes, archivos CSS y JavaScript estén utilizando HTTPS.",
+  "version": "1.0.1",
+  "description": "Verify that the page and links, images, CSS files, and JavaScript are using HTTPS.",
   "permissions": [
     "tabs",
     "scripting",
@@ -14,7 +14,7 @@
     "https://*/*"
   ],
   "action": {
-    "default_title": "Configuración de notificaciones",
+    "default_title": "Notification Settings",
     "default_popup": "popup.html"
   },
   "icons": {

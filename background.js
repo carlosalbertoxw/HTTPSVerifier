@@ -23,7 +23,7 @@ function checkLinksHttps(tab) {
             const url = element.getAttribute(attribute);
             const isAbsoluteUrl = /^https?:\/\//i.test(url);
 
-            // Retorna true si la URL es relativa o si es absoluta y comienza con "https://"
+            // Returns true if the URL is relative or if it is absolute and starts with "https://"
             return (
               !isAbsoluteUrl || (isAbsoluteUrl && url.startsWith("https://"))
             );
@@ -54,7 +54,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       const checkHttpsPagePromise = new Promise((resolve) => {
         chrome.storage.local.get("enableNotificationsURL", (result) => {
           if (result.enableNotificationsURL !== false && !checkHttpsPage(tab)) {
-            resolve("No se utiliza HTTPS.");
+            resolve("HTTPS is not used.");
           } else {
             resolve(null);
           }
@@ -66,7 +66,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
           if (result.enableNotificationsLINKS !== false) {
             const allLinksHttps = await checkLinksHttps(tab);
             if (!allLinksHttps) {
-              resolve("Algunos enlaces no utilizan HTTPS.");
+              resolve("Some links do not use HTTPS.");
             } else {
               resolve(null);
             }
@@ -88,7 +88,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       });
 
       if (issues.length > 0) {
-        showNotification("En la página " + tab.url, issues.join("\n"));
+        showNotification("On the page " + tab.url, issues.join("\n"));
       }
     }
   }

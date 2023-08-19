@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "toggleNotificationsLINKS"
   );
 
-  // Cargar la configuración del almacenamiento local
+  // Load the settings from local storage
   chrome.storage.local.get("enableNotificationsURL", (result) => {
     toggleNotificationsURL.checked = result.enableNotificationsURL !== false;
   });
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       result.enableNotificationsLINKS !== false;
   });
 
-  // Guardar la configuración en el almacenamiento local cuando se cambie el estado del checkbox
+  // Save the settings to local storage when the checkbox state changes
   toggleNotificationsURL.addEventListener("change", (event) => {
     chrome.storage.local.set({ enableNotificationsURL: event.target.checked });
   });
