@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "HTTPS Verifier",
-  "version": "1.0.1",
-  "description": "Verify that the page and links, images, CSS files, and JavaScript are using HTTPS.",
+  "name": "__MSG_extName__",
+  "version": "1.2.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "permissions": [
-    "tabs",
     "scripting",
     "notifications",
     "storage"
@@ -14,7 +14,7 @@
     "https://*/*"
   ],
   "action": {
-    "default_title": "Notification Settings",
+    "default_title": "__MSG_actionTitle__",
     "default_popup": "popup.html"
   },
   "icons": {
@@ -24,6 +24,7 @@
     "128": "images/icon-128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   }
 }

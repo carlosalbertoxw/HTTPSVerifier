@@ -1,0 +1,66 @@
+{
+  "extName": {
+    "message": "HTTPS Verifier",
+    "description": "Name of the extension."
+  },
+  "extDescription": {
+    "message": "Browse with confidence: get instant alerts when a page or its links, images, styles, or scripts don't use secure HTTPS.",
+    "description": "Description of the extension."
+  },
+  "actionTitle": {
+    "message": "Notification Settings",
+    "description": "Tooltip of the extension icon."
+  },
+  "popupTitle": {
+    "message": "Notification Settings",
+    "description": "Heading of the popup."
+  },
+  "enableUrlNotifications": {
+    "message": "Notify when the page does not use HTTPS",
+    "description": "Label of the checkbox that toggles page URL notifications."
+  },
+  "enableLinkNotifications": {
+    "message": "Notify when links or resources do not use HTTPS",
+    "description": "Label of the checkbox that toggles link/resource notifications."
+  },
+  "notificationTitle": {
+    "message": "HTTPS issues on $URL$",
+    "description": "Title of the notification.",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "http://example.com"
+      }
+    }
+  },
+  "issuePageNotHttps": {
+    "message": "The page does not use HTTPS.",
+    "description": "Notification line shown when the page itself is not served over HTTPS."
+  },
+  "checkNow": {
+    "message": "Check this page now",
+    "description": "Label of the button that manually checks the active tab."
+  },
+  "checkResultOk": {
+    "message": "Everything uses HTTPS on this page.",
+    "description": "Result shown when the manual check finds no issues."
+  },
+  "checkNotPossible": {
+    "message": "This page cannot be checked.",
+    "description": "Result shown when the active tab cannot be checked (e.g. browser pages)."
+  },
+  "resourcesNotChecked": {
+    "message": "The page resources could not be checked.",
+    "description": "Result shown when the resource check failed on the active tab."
+  },
+  "issueInsecureResources": {
+    "message": "$COUNT$ link(s) or resource(s) do not use HTTPS.",
+    "description": "Notification line shown when links or resources are not served over HTTPS.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  }
+}

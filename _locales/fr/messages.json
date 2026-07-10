@@ -1,0 +1,66 @@
+{
+  "extName": {
+    "message": "HTTPS Verifier",
+    "description": "Nom de l'extension."
+  },
+  "extDescription": {
+    "message": "Naviguez en toute confiance : soyez alerté quand une page ou ses liens, images, styles ou scripts n'utilisent pas HTTPS.",
+    "description": "Description de l'extension."
+  },
+  "actionTitle": {
+    "message": "Paramètres des notifications",
+    "description": "Info-bulle de l'icône de l'extension."
+  },
+  "popupTitle": {
+    "message": "Paramètres des notifications",
+    "description": "Titre du popup."
+  },
+  "enableUrlNotifications": {
+    "message": "Notifier lorsque la page n'utilise pas HTTPS",
+    "description": "Libellé de la case à cocher pour les notifications de l'URL de la page."
+  },
+  "enableLinkNotifications": {
+    "message": "Notifier lorsque des liens ou des ressources n'utilisent pas HTTPS",
+    "description": "Libellé de la case à cocher pour les notifications des liens/ressources."
+  },
+  "notificationTitle": {
+    "message": "Problèmes HTTPS sur $URL$",
+    "description": "Titre de la notification.",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "http://example.com"
+      }
+    }
+  },
+  "issuePageNotHttps": {
+    "message": "La page n'utilise pas HTTPS.",
+    "description": "Ligne de notification lorsque la page n'est pas servie via HTTPS."
+  },
+  "checkNow": {
+    "message": "Vérifier cette page maintenant",
+    "description": "Libellé du bouton qui vérifie manuellement l'onglet actif."
+  },
+  "checkResultOk": {
+    "message": "Tout utilise HTTPS sur cette page.",
+    "description": "Résultat lorsque la vérification manuelle ne trouve aucun problème."
+  },
+  "checkNotPossible": {
+    "message": "Cette page ne peut pas être vérifiée.",
+    "description": "Résultat lorsque l'onglet actif ne peut pas être vérifié (p. ex. pages du navigateur)."
+  },
+  "resourcesNotChecked": {
+    "message": "Impossible de vérifier les ressources de la page.",
+    "description": "Résultat lorsque la vérification des ressources a échoué sur l'onglet actif."
+  },
+  "issueInsecureResources": {
+    "message": "$COUNT$ lien(s) ou ressource(s) n'utilisent pas HTTPS.",
+    "description": "Ligne de notification lorsque des liens ou ressources ne sont pas en HTTPS.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  }
+}

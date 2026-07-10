@@ -1,3 +1,22 @@
+import { inspectTab } from "./page-check.js";
+import { DEFAULT_SETTINGS } from "./settings.js";
+
+const LAST_NOTIFIED_KEY = "lastNotifiedUrlByTab";
+
+// Make the default settings explicit in storage on install/update.
+chrome.runtime.onInstalled.addListener(async () => {
+  const stored = await chrome.storage.local.get(Object.keys(DEFAULT_SETTINGS));
+  const missing = {};
+  for (const [key, value] of Object.entries(DEFAULT_SETTINGS)) {
+    if (stored[key] === undefined) {
+      missing[key] = value;
+    }
+  }
+  if (Object.keys(missing).length > 0) {
+    await chrome.storage.local.set(missing);
+  }
+});
+
 function showNotification(title, message) {
   const notificationId = `issue-${Date.now()}`;
   chrome.notifications.create(notificationId, {
@@ -8,88 +27,73 @@ function showNotification(title, message) {
   });
 }
 
-function checkLinksHttps(tab) {
-  return new Promise((resolve) => {
-    chrome.scripting.executeScript(
-      {
-        target: { tabId: tab.id },
-        function: () => {
-          const selector =
-            "a[href], img[src], link[href][rel='stylesheet'], script[src]";
-          const allLinksHttps = Array.from(
-            document.querySelectorAll(selector)
-          ).every((element) => {
-            const attribute = element.tagName === "IMG" ? "src" : "href";
-            const url = element.getAttribute(attribute);
-            const isAbsoluteUrl = /^https?:\/\//i.test(url);
-
-            // Returns true if the URL is relative or if it is absolute and starts with "https://"
-            return (
-              !isAbsoluteUrl || (isAbsoluteUrl && url.startsWith("https://"))
-            );
-          });
-          return allLinksHttps;
-        },
-      },
-      (results) => {
-        if (chrome.runtime.lastError) {
-          resolve(false);
-          return;
-        }
-        resolve(results && results[0].result);
-      }
-    );
-  });
+// The last URL notified per tab lives in chrome.storage.session: it survives
+// the MV3 service worker being suspended and is cleared when Chrome closes.
+async function getLastNotifiedUrls() {
+  const stored = await chrome.storage.session.get(LAST_NOTIFIED_KEY);
+  return stored[LAST_NOTIFIED_KEY] || {};
 }
 
-function checkHttpsPage(tab) {
-  return tab.url.startsWith("https://");
+async function setLastNotifiedUrl(tabId, url) {
+  const lastNotified = await getLastNotifiedUrls();
+  if (url === undefined) {
+    delete lastNotified[tabId];
+  } else {
+    lastNotified[tabId] = url;
+  }
+  await chrome.storage.session.set({ [LAST_NOTIFIED_KEY]: lastNotified });
 }
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  setLastNotifiedUrl(tabId, undefined);
+});
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete") {
-    if (tab.url.startsWith("http")) {
-      const issues = [];
-
-      const checkHttpsPagePromise = new Promise((resolve) => {
-        chrome.storage.local.get("enableNotificationsURL", (result) => {
-          if (result.enableNotificationsURL !== false && !checkHttpsPage(tab)) {
-            resolve("HTTPS is not used.");
-          } else {
-            resolve(null);
-          }
-        });
-      });
-
-      const checkLinksHttpsPromise = new Promise(async (resolve) => {
-        chrome.storage.local.get("enableNotificationsLINKS", async (result) => {
-          if (result.enableNotificationsLINKS !== false) {
-            const allLinksHttps = await checkLinksHttps(tab);
-            if (!allLinksHttps) {
-              resolve("Some links do not use HTTPS.");
-            } else {
-              resolve(null);
-            }
-          } else {
-            resolve(null);
-          }
-        });
-      });
-
-      const results = await Promise.all([
-        checkHttpsPagePromise,
-        checkLinksHttpsPromise,
-      ]);
-
-      results.forEach((result) => {
-        if (result) {
-          issues.push(result);
-        }
-      });
-
-      if (issues.length > 0) {
-        showNotification("On the page " + tab.url, issues.join("\n"));
-      }
-    }
+  if (
+    changeInfo.status !== "complete" ||
+    !tab.url ||
+    !tab.url.startsWith("http")
+  ) {
+    return;
   }
+
+  const settings = await chrome.storage.local.get(DEFAULT_SETTINGS);
+  const inspection = await inspectTab(tab, {
+    includeResources: settings.enableNotificationsLINKS,
+  });
+  if (!inspection) {
+    return;
+  }
+
+  const issues = [];
+  if (settings.enableNotificationsURL && inspection.pageInsecure) {
+    issues.push(chrome.i18n.getMessage("issuePageNotHttps"));
+  }
+  if (inspection.insecureCount > 0) {
+    issues.push(
+      chrome.i18n.getMessage("issueInsecureResources", [
+        String(inspection.insecureCount),
+      ])
+    );
+  }
+
+  if (issues.length === 0) {
+    return;
+  }
+
+  // A URL is notified at most once per tab while the user stays on it
+  // (reloads included). Closing the tab, navigating to a different URL, or
+  // closing the browser resets the deduplication.
+  const lastNotified = await getLastNotifiedUrls();
+  if (lastNotified[tabId] === tab.url) {
+    return;
+  }
+  await setLastNotifiedUrl(tabId, tab.url);
+
+  // Only the origin: full URLs can carry sensitive query strings and are
+  // visible to anyone looking at the screen.
+  showNotification(
+    chrome.i18n.getMessage("notificationTitle", [new URL(tab.url).origin]),
+    issues.join("\n")
+  );
 });

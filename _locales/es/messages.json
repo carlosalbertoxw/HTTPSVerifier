@@ -1,0 +1,66 @@
+{
+  "extName": {
+    "message": "HTTPS Verifier",
+    "description": "Nombre de la extensión."
+  },
+  "extDescription": {
+    "message": "Navega con confianza: recibe alertas al instante cuando una página o sus enlaces, imágenes, estilos o scripts no usan HTTPS.",
+    "description": "Descripción de la extensión."
+  },
+  "actionTitle": {
+    "message": "Configuración de notificaciones",
+    "description": "Tooltip del ícono de la extensión."
+  },
+  "popupTitle": {
+    "message": "Configuración de notificaciones",
+    "description": "Encabezado del popup."
+  },
+  "enableUrlNotifications": {
+    "message": "Notificar cuando la página no use HTTPS",
+    "description": "Etiqueta del checkbox que activa las notificaciones de la URL de la página."
+  },
+  "enableLinkNotifications": {
+    "message": "Notificar cuando los enlaces o recursos no usen HTTPS",
+    "description": "Etiqueta del checkbox que activa las notificaciones de enlaces/recursos."
+  },
+  "notificationTitle": {
+    "message": "Problemas de HTTPS en $URL$",
+    "description": "Título de la notificación.",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "http://example.com"
+      }
+    }
+  },
+  "issuePageNotHttps": {
+    "message": "La página no usa HTTPS.",
+    "description": "Línea de la notificación cuando la página no se sirve por HTTPS."
+  },
+  "checkNow": {
+    "message": "Revisar esta página ahora",
+    "description": "Etiqueta del botón que revisa manualmente la pestaña activa."
+  },
+  "checkResultOk": {
+    "message": "Todo usa HTTPS en esta página.",
+    "description": "Resultado cuando la revisión manual no encuentra problemas."
+  },
+  "checkNotPossible": {
+    "message": "Esta página no se puede revisar.",
+    "description": "Resultado cuando la pestaña activa no se puede revisar (p. ej. páginas del navegador)."
+  },
+  "resourcesNotChecked": {
+    "message": "No se pudieron revisar los recursos de la página.",
+    "description": "Resultado cuando la revisión de recursos falló en la pestaña activa."
+  },
+  "issueInsecureResources": {
+    "message": "$COUNT$ enlace(s) o recurso(s) no usan HTTPS.",
+    "description": "Línea de la notificación cuando hay enlaces o recursos sin HTTPS.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+¿Sabes realmente si las páginas que visitas son seguras?
+
+Una página puede cargar por HTTPS y aun así incluir enlaces, imágenes, hojas de estilo o scripts servidos por HTTP inseguro: riesgos ocultos de los que el navegador rara vez te avisa. HTTPS Verifier vigila cada página que visitas y te avisa en el momento en que algo no está bien.
+
+POR QUÉ TE VA A ENCANTAR
+
+✔ Alertas al instante — recibe una notificación de escritorio cuando una página no usa HTTPS.
+✔ Revisión a fondo — detecta enlaces, imágenes, CSS y JavaScript cargados por HTTP inseguro, y te dice exactamente cuántos encontró.
+✔ Revisión bajo demanda — revisa la página en la que estás en cualquier momento con un clic desde el popup.
+✔ Tú tienes el control — activa o desactiva cada tipo de alerta con un clic desde el popup.
+✔ Habla tu idioma — disponible en español, inglés y francés, adaptándose automáticamente a tu navegador.
+✔ Ligera y privada — sin cuentas, sin recopilación de datos, sin rastreo. Todo funciona localmente en tu navegador.
+
+CÓMO FUNCIONA
+
+1. Instala la extensión: no requiere configuración.
+2. Navega como siempre.
+3. Si una página o alguno de sus recursos no usa HTTPS, recibirás una notificación con los detalles.
+
+Perfecta para desarrolladores web que auditan sus propios sitios, y para cualquiera que quiera un par de ojos extra cuidando su seguridad.
+
+Instala HTTPS Verifier y no vuelvas a pasar por alto una conexión insegura.
