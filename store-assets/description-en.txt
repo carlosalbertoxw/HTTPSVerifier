@@ -8,7 +8,7 @@ WHY YOU'LL LOVE IT
 ✔ Deep resource check — detects links, images, CSS and JavaScript loaded over insecure HTTP, and tells you exactly how many were found.
 ✔ On-demand check — review the page you're on at any time with one click from the popup.
 ✔ You're in control — turn each type of alert on or off with one click from the popup.
-✔ Speaks your language — available in English, Spanish and French, automatically matching your browser.
+✔ Speaks your language — available in English, Spanish, French and Portuguese, automatically matching your browser.
 ✔ Light and private — no account, no data collection, no tracking. Everything runs locally in your browser.
 
 HOW IT WORKS

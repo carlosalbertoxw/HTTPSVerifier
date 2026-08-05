@@ -25,6 +25,7 @@ The extension is localized with the [`chrome.i18n`](https://developer.chrome.com
 - English (default)
 - Español
 - Français
+- Português (Brasil)
 
 Translations live in the `_locales/<lang>/messages.json` files. To add a new language, copy `_locales/en/messages.json` into a new folder named with the desired [locale code](https://developer.chrome.com/docs/extensions/reference/api/i18n#locales) and translate the `message` values.
 
@@ -74,7 +75,8 @@ https-verifier-1.1.0.zip
 ├── _locales/
 │   ├── en/messages.json
 │   ├── es/messages.json
-│   └── fr/messages.json
+│   ├── fr/messages.json
+│   └── pt_BR/messages.json
 └── images/
     ├── icon-16.png
     ├── icon-32.png
@@ -94,7 +96,7 @@ Before packaging, make sure the `version` in `manifest.json` is **higher** than 
 
 1. Open the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole) (publishing requires a developer account with the one-time $5 registration fee).
 2. Select the existing **HTTPS Verifier** item (or **New item** for a first publish) and upload the ZIP under **Package → Upload new package**.
-3. In **Store listing**, fill in the detailed description — the ready-to-paste texts live in `store-assets/description-{en,es,fr}.txt`. Because the extension declares `_locales`, the dashboard lets you provide the listing in each supported language; the short description under the name is taken automatically from the localized `manifest.json`.
+3. In **Store listing**, fill in the detailed description — the ready-to-paste texts live in `store-assets/description-{en,es,fr,pt_BR}.txt`. Because the extension declares `_locales`, the dashboard lets you provide the listing in each supported language; the short description under the name is taken automatically from the localized `manifest.json`.
 4. Upload at least one screenshot (640×400 or 1280×800 JPEG/PNG). The ready-made ones live in `store-assets/*.jpg`.
 
 ### 3. Privacy declarations

@@ -8,7 +8,7 @@ POR QUÉ TE VA A ENCANTAR
 ✔ Revisión a fondo — detecta enlaces, imágenes, CSS y JavaScript cargados por HTTP inseguro, y te dice exactamente cuántos encontró.
 ✔ Revisión bajo demanda — revisa la página en la que estás en cualquier momento con un clic desde el popup.
 ✔ Tú tienes el control — activa o desactiva cada tipo de alerta con un clic desde el popup.
-✔ Habla tu idioma — disponible en español, inglés y francés, adaptándose automáticamente a tu navegador.
+✔ Habla tu idioma — disponible en español, inglés, francés y portugués, adaptándose automáticamente a tu navegador.
 ✔ Ligera y privada — sin cuentas, sin recopilación de datos, sin rastreo. Todo funciona localmente en tu navegador.
 
 CÓMO FUNCIONA

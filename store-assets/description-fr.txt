@@ -8,7 +8,7 @@ POURQUOI VOUS ALLEZ L'ADORER
 ✔ Analyse approfondie — détecte les liens, images, CSS et JavaScript chargés en HTTP non sécurisé, et vous indique combien ont été trouvés.
 ✔ Vérification à la demande — vérifiez la page où vous êtes à tout moment d'un clic depuis le popup.
 ✔ Vous gardez le contrôle — activez ou désactivez chaque type d'alerte en un clic depuis le popup.
-✔ Parle votre langue — disponible en français, anglais et espagnol, en s'adaptant automatiquement à votre navigateur.
+✔ Parle votre langue — disponible en français, anglais, espagnol et portugais, en s'adaptant automatiquement à votre navigateur.
 ✔ Légère et privée — pas de compte, pas de collecte de données, pas de suivi. Tout fonctionne localement dans votre navigateur.
 
 COMMENT ÇA MARCHE
