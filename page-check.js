@@ -49,7 +49,8 @@ function collectFrameUrls() {
   // What the page actually requested: also covers CSS url(), fonts and
   // resources added by scripts after the markup was parsed. Chrome keeps only
   // the first 250 entries unless the page enlarges the buffer; the markup
-  // selectors above still cover the rest.
+  // selectors above still cover the rest. What a cross-origin stylesheet
+  // loads (its @import and url()) is never reported here.
   for (const entry of performance.getEntriesByType("resource")) {
     entries.push({ kind: "resources", value: entry.name, srcset: false });
   }

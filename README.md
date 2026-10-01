@@ -59,8 +59,9 @@ Translations live in the `_locales/<lang>/messages.json` files. To add a new lan
 | `settings.js` | Single source of truth for the settings keys and defaults. |
 | `popup.html` / `popup.js` | Settings popup and on-demand page check. |
 | `_locales/` | Translations (`chrome.i18n`). |
-| `tests/` | Unit tests (`node:test`). |
+| `tests/` | Unit tests (`node:test`). `tests/manual/` holds the manual test page (`npm run test-page`). |
 | `scripts/build.mjs` | Builds the Chrome Web Store ZIP. |
+| `scripts/screenshots.mjs` / `scripts/release-notes.mjs` | Store screenshots and GitHub release notes. |
 | `store-assets/` | Chrome Web Store screenshots and listing descriptions (not part of the packaged extension). |
 | `.github/` | CI, CodeQL and Dependabot configuration. |
 
@@ -80,6 +81,36 @@ npm run build         # dist/https-verifier-<version>.zip
 ```
 
 CI runs the same commands on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the conventions and [CHANGELOG.md](CHANGELOG.md) for the version history.
+
+### Manual test page
+
+To try the extension in Chrome on a page with a known result:
+
+1. Load the extension as described above (or click the reload icon of the extension in `chrome://extensions` after changing the code).
+2. Start the test page:
+
+   ```
+   npm run test-page
+   ```
+
+3. Open http://localhost:8080/ in Chrome. Keep the terminal open; press `Ctrl+C` to stop the server.
+
+The page is served from `http://localhost:8080` and loads its resources from a second origin, `http://127.0.0.1:8081`, so they count as resources from another site. It covers images, `srcset`, scripts, a script-added image, stylesheets, a CSS `@import`, a video poster, an iframe from another site (with its own image and form), forms and links, plus cases that must **not** be counted. The expected result is shown at the top of the page:
+
+- The page does not use HTTPS.
+- 10 resource(s) (images, scripts, styles, frames…) load over HTTP.
+- 2 form(s) send data over HTTP.
+- 2 link(s) point to HTTP pages.
+
+Check it both ways: the notification shown when the page loads, and **Check this page now** in the popup. Reloading the tab must not notify again; the "another URL" link on the page must.
+
+For HTTPS pages with mixed content, use the public pages of [badssl.com](https://badssl.com/), for example https://mixed.badssl.com/ (image), https://mixed-script.badssl.com/ (script), https://mixed-form.badssl.com/ (form) and https://very.badssl.com/ (several kinds), and http://http.badssl.com/ for a page that is not served over HTTPS.
+
+### Known limitations
+
+- **Resources loaded by a stylesheet from another site** (its `@import` and `url()`) are not detected: Chrome leaves them out of the Resource Timing data that the extension reads, and they are not in the page's markup. The stylesheet itself is detected.
+- Chrome keeps only the first 250 Resource Timing entries of a page; resources loaded after that are detected only if they are in the page's markup.
+- An image used only as a CSS background is requested (and detected) only once Chrome renders it.
 
 ## Publishing to the Chrome Web Store
 
