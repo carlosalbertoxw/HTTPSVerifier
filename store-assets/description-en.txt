@@ -7,13 +7,13 @@ WHY YOU'LL LOVE IT
 ✔ Instant alerts — get a desktop notification when a page doesn't use HTTPS.
 ✔ Deep resource check — detects images, scripts, styles, frames, media and forms that use insecure HTTP, even inside frames or loaded by scripts, and links to HTTP pages, telling you exactly how many of each were found.
 ✔ On-demand check — review the page you're on at any time with one click from the popup.
-✔ You're in control — turn each type of alert on or off with one click from the popup. Access to the sites is only requested when you enable automatic alerts, and given back when you turn them off.
+✔ You're in control — turn each type of alert on or off with one click from the popup.
 ✔ Speaks your language — available in English, Spanish, French and Portuguese, automatically matching your browser.
 ✔ Light and private — no account, no data collection, no tracking. Everything runs locally in your browser.
 
 HOW IT WORKS
 
-1. Install the extension and, from its popup, allow access to the sites so it can check every page automatically (the on-demand check works without it).
+1. Install the extension — no setup required.
 2. Browse as usual.
 3. If a page or any of its resources isn't using HTTPS, you'll get a notification with the details.
 

@@ -7,13 +7,13 @@ POR QUE VOCÊ VAI ADORAR
 ✔ Alertas na hora — receba uma notificação na área de trabalho quando uma página não usar HTTPS.
 ✔ Verificação a fundo — detecta imagens, scripts, estilos, frames, mídia e formulários que usam HTTP inseguro, mesmo dentro de frames ou carregados por scripts, e links para páginas HTTP, informando exatamente quantos de cada tipo foram encontrados.
 ✔ Verificação sob demanda — verifique a página em que você está a qualquer momento com um clique no popup.
-✔ Você no controle — ative ou desative cada tipo de alerta com um clique no popup. O acesso aos sites só é pedido quando você ativa os alertas automáticos, e é liberado quando você os desativa.
+✔ Você no controle — ative ou desative cada tipo de alerta com um clique no popup.
 ✔ Fala a sua língua — disponível em português, inglês, espanhol e francês, adaptando-se automaticamente ao seu navegador.
 ✔ Leve e privada — sem contas, sem coleta de dados, sem rastreamento. Tudo funciona localmente no seu navegador.
 
 COMO FUNCIONA
 
-1. Instale a extensão e, no popup, permita o acesso aos sites para que ela verifique cada página automaticamente (a verificação sob demanda funciona sem ele).
+1. Instale a extensão: não precisa de configuração.
 2. Navegue normalmente.
 3. Se uma página ou algum de seus recursos não usar HTTPS, você receberá uma notificação com os detalhes.
 

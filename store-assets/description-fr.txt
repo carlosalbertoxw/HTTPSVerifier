@@ -7,13 +7,13 @@ POURQUOI VOUS ALLEZ L'ADORER
 ✔ Alertes instantanées — recevez une notification lorsque la page n'utilise pas HTTPS.
 ✔ Analyse approfondie — détecte les images, scripts, styles, cadres, médias et formulaires qui utilisent HTTP non sécurisé, même dans des cadres ou chargés par des scripts, ainsi que les liens vers des pages HTTP, et vous indique combien de chaque type ont été trouvés.
 ✔ Vérification à la demande — vérifiez la page où vous êtes à tout moment d'un clic depuis le popup.
-✔ Vous gardez le contrôle — activez ou désactivez chaque type d'alerte en un clic depuis le popup. L'accès aux sites n'est demandé que lorsque vous activez les alertes automatiques, et il est rendu lorsque vous les désactivez.
+✔ Vous gardez le contrôle — activez ou désactivez chaque type d'alerte en un clic depuis le popup.
 ✔ Parle votre langue — disponible en français, anglais, espagnol et portugais, en s'adaptant automatiquement à votre navigateur.
 ✔ Légère et privée — pas de compte, pas de collecte de données, pas de suivi. Tout fonctionne localement dans votre navigateur.
 
 COMMENT ÇA MARCHE
 
-1. Installez l'extension et, depuis son popup, autorisez l'accès aux sites pour qu'elle vérifie chaque page automatiquement (la vérification à la demande fonctionne sans cet accès).
+1. Installez l'extension — aucune configuration nécessaire.
 2. Naviguez comme d'habitude.
 3. Si une page ou l'une de ses ressources n'utilise pas HTTPS, vous recevez une notification détaillée.
 

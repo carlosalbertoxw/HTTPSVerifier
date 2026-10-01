@@ -45,6 +45,10 @@
     "message": "Todo usa HTTPS en esta página.",
     "description": "Resultado cuando la revisión manual no encuentra problemas."
   },
+  "checkResultPartial": {
+    "message": "No se encontraron problemas en las partes de la página que se pudieron revisar (algunos marcos no).",
+    "description": "Resultado cuando la revisión manual no encontró problemas pero no pudo inspeccionar todos los marcos de la página."
+  },
   "checkNotPossible": {
     "message": "Esta página no se puede revisar.",
     "description": "Resultado cuando la pestaña activa no se puede revisar (p. ej. páginas del navegador)."
@@ -52,6 +56,10 @@
   "resourcesNotChecked": {
     "message": "No se pudieron revisar los recursos de la página.",
     "description": "Resultado cuando la revisión de recursos falló en la pestaña activa."
+  },
+  "framesNotChecked": {
+    "message": "No se pudieron revisar algunos marcos de la página.",
+    "description": "Resultado cuando la revisión manual pudo inspeccionar la página pero no todos sus marcos."
   },
   "issueInsecureResources": {
     "message": "$COUNT$ recurso(s) (imágenes, scripts, estilos, marcos…) se cargan por HTTP.",
@@ -82,13 +90,5 @@
         "example": "3"
       }
     }
-  },
-  "permissionNeeded": {
-    "message": "Las notificaciones automáticas necesitan acceso a los sitios que visitas. La revisión manual funciona sin él.",
-    "description": "Aviso en el popup (y en el tooltip del icono) cuando las notificaciones automáticas están activas pero no se concedió acceso a los sitios."
-  },
-  "grantPermission": {
-    "message": "Permitir acceso a los sitios",
-    "description": "Botón que pide a Chrome acceso a los sitios."
   }
 }

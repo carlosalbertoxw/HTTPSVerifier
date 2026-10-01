@@ -14,10 +14,9 @@ happens locally in your browser, and it makes no network requests of its own.
   them only to count how many use `http://`. It reads no text, form values,
   cookies or passwords.
 
-Access to all `http://` and `https://` sites is optional. It is requested
-only when you enable the automatic notifications, which check every page you
-visit, and it is given back when you turn them off. The on-demand check in
-the popup only accesses the current tab, and only when you open the popup.
+This is why the extension asks for access to all `http://` and `https://`
+sites: it needs it to check every page you visit. You can limit it to
+specific sites from Chrome's site access menu.
 
 ## What the extension stores
 

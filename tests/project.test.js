@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
-import { HOST_PERMISSIONS, wantsAutomaticChecks } from "../settings.js";
+import { wantsAutomaticChecks } from "../settings.js";
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -15,12 +15,18 @@ test("package.json and manifest.json declare the same version", () => {
   );
 });
 
-test("access to all sites is optional and matches the code", () => {
+// Changing permissions disables the extension for existing users until they
+// accept the new warning, so any change here must be deliberate (see the
+// "Permissions" section of the README).
+test("the permissions are the documented ones", () => {
   const manifest = readJson("manifest.json");
-  assert.equal(manifest.host_permissions, undefined);
-  assert.deepEqual(manifest.optional_host_permissions, HOST_PERMISSIONS.origins);
-  assert.ok(manifest.permissions.includes("activeTab"));
-  assert.ok(!manifest.permissions.includes("tabs"));
+  assert.deepEqual(manifest.permissions, [
+    "scripting",
+    "notifications",
+    "storage",
+  ]);
+  assert.deepEqual(manifest.host_permissions, ["http://*/*", "https://*/*"]);
+  assert.equal(manifest.optional_host_permissions, undefined);
 });
 
 test("automatic checks are wanted when any notification is enabled", () => {
@@ -74,7 +80,8 @@ test("every message used by the code exists", () => {
     /getMessage\(\s*"(\w+)"/g,
     /data-i18n="(\w+)"/g,
     /__MSG_(\w+)__/g,
-    /"(issue\w+)"/g,
+    // Message keys passed around as [key, substitutions] (not element ids).
+    /(?<!getElementById\(|id=)"((?:issue|check|frames|resources)[A-Z]\w*)"/g,
   ]) {
     for (const [, key] of sources.matchAll(pattern)) {
       used.add(key);

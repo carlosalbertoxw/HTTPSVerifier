@@ -22,7 +22,10 @@ const HTTPS_TAB = { id: 7, url: "https://example.com/page" };
 test("non-web tabs cannot be checked", async () => {
   fakeChrome(() => assert.fail("must not inject"));
   assert.equal(
-    await inspectTab({ id: 1, url: "chrome://settings" }, { includeUrls: true }),
+    await inspectTab(
+      { id: 1, url: "chrome://settings" },
+      { includeUrls: true }
+    ),
     null
   );
   assert.equal(await inspectTab(undefined, { includeUrls: true }), null);
@@ -34,7 +37,11 @@ test("without includeUrls nothing is injected", async () => {
     { id: 1, url: "http://example.com/" },
     { includeUrls: false }
   );
-  assert.deepEqual(inspection, { pageInsecure: true, insecureCounts: null });
+  assert.deepEqual(inspection, {
+    pageInsecure: true,
+    insecureCounts: null,
+    partial: false,
+  });
   assert.equal(calls.length, 0);
 });
 
@@ -67,6 +74,8 @@ test("the results of every frame are merged", async () => {
   assert.deepEqual(inspection, {
     pageInsecure: false,
     insecureCounts: { resources: 1, forms: 1, links: 1 },
+    // Frame 4 returned no result.
+    partial: true,
   });
   assert.deepEqual(calls[0].target, { tabId: 7, allFrames: true });
   assert.equal(typeof calls[0].func, "function");
@@ -83,9 +92,47 @@ test("a failed injection reports the URLs as not checked", async (t) => {
     { includeUrls: true }
   );
 
-  assert.deepEqual(inspection, { pageInsecure: false, insecureCounts: null });
+  assert.deepEqual(inspection, {
+    pageInsecure: false,
+    insecureCounts: null,
+    partial: false,
+  });
   // Only the origin is logged, never the path or the query string.
   const [message] = debug.mock.calls[0].arguments;
   assert.match(message, /https:\/\/example\.com/);
   assert.doesNotMatch(message, /account|token/);
+});
+
+test("if injecting into every frame fails, the top frame is still checked", async () => {
+  const calls = fakeChrome(({ target }) => {
+    if (target.allFrames) {
+      throw new Error(
+        "Cannot access a chrome-extension:// URL of different extension"
+      );
+    }
+    return [
+      {
+        frameId: 0,
+        result: {
+          documentUrl: HTTPS_TAB.url,
+          baseUri: HTTPS_TAB.url,
+          entries: [
+            { kind: "resources", value: "http://cdn.example.net/a.js" },
+          ],
+        },
+      },
+    ];
+  });
+
+  const inspection = await inspectTab(HTTPS_TAB, { includeUrls: true });
+
+  assert.deepEqual(inspection, {
+    pageInsecure: false,
+    insecureCounts: { resources: 1, forms: 0, links: 0 },
+    partial: true,
+  });
+  assert.deepEqual(
+    calls.map(({ target }) => target.allFrames),
+    [true, false]
+  );
 });

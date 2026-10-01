@@ -47,7 +47,9 @@ function collectFrameUrls() {
   }
 
   // What the page actually requested: also covers CSS url(), fonts and
-  // resources added by scripts after the markup was parsed.
+  // resources added by scripts after the markup was parsed. Chrome keeps only
+  // the first 250 entries unless the page enlarges the buffer; the markup
+  // selectors above still cover the rest.
   for (const entry of performance.getEntriesByType("resource")) {
     entries.push({ kind: "resources", value: entry.name, srcset: false });
   }
@@ -55,9 +57,17 @@ function collectFrameUrls() {
   return { documentUrl: location.href, baseUri: document.baseURI, entries };
 }
 
+function injectCollector(tabId, allFrames) {
+  return chrome.scripting.executeScript({
+    target: { tabId, allFrames },
+    func: collectFrameUrls,
+  });
+}
+
 // Inspects a tab for HTTPS issues. Returns null when the tab cannot be
 // checked at all (e.g. chrome:// pages). In the result, insecureCounts is
-// null when the URLs were not checked (skipped or injection failed).
+// null when the URLs were not checked (skipped or injection failed), and
+// partial is true when some frames of the page could not be checked.
 export async function inspectTab(tab, { includeUrls }) {
   if (!tab || !tab.url || !tab.url.startsWith("http")) {
     return null;
@@ -66,6 +76,7 @@ export async function inspectTab(tab, { includeUrls }) {
   const inspection = {
     pageInsecure: !tab.url.startsWith("https://"),
     insecureCounts: null,
+    partial: false,
   };
 
   if (!includeUrls) {
@@ -74,18 +85,23 @@ export async function inspectTab(tab, { includeUrls }) {
 
   let frames;
   try {
-    frames = await chrome.scripting.executeScript({
-      target: { tabId: tab.id, allFrames: true },
-      func: collectFrameUrls,
-    });
-  } catch (error) {
-    // "Could not check" is not the same as "no issues": leave a trace. Only
-    // the origin, as in the notifications: full URLs can carry secrets.
-    console.debug(
-      `HTTPS Verifier: could not inspect ${new URL(tab.url).origin}: ` +
-        error.message
-    );
-    return inspection;
+    frames = await injectCollector(tab.id, true);
+  } catch (allFramesError) {
+    // If one frame cannot be injected (e.g. a frame owned by another
+    // extension) and Chrome rejects the whole call, still check the page
+    // itself instead of reporting nothing.
+    try {
+      frames = await injectCollector(tab.id, false);
+      inspection.partial = true;
+    } catch (error) {
+      // "Could not check" is not the same as "no issues": leave a trace. Only
+      // the origin, as in the notifications: full URLs can carry secrets.
+      console.debug(
+        `HTTPS Verifier: could not inspect ${new URL(tab.url).origin}: ` +
+          error.message
+      );
+      return inspection;
+    }
   }
 
   const found = emptyFindings();
@@ -94,6 +110,8 @@ export async function inspectTab(tab, { includeUrls }) {
     if (frame && frame.result) {
       collectInsecureUrls(frame.result, found);
       checkedFrames++;
+    } else {
+      inspection.partial = true;
     }
   }
   if (checkedFrames > 0) {

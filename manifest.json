@@ -5,16 +5,8 @@
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "minimum_chrome_version": "102",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "notifications",
-    "storage"
-  ],
-  "optional_host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
+  "permissions": ["scripting", "notifications", "storage"],
+  "host_permissions": ["http://*/*", "https://*/*"],
   "action": {
     "default_title": "__MSG_actionTitle__",
     "default_popup": "popup.html"

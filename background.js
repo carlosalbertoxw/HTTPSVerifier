@@ -1,10 +1,6 @@
 import { describeIssues } from "./issues.js";
 import { inspectTab } from "./page-check.js";
-import {
-  DEFAULT_SETTINGS,
-  HOST_PERMISSIONS,
-  wantsAutomaticChecks,
-} from "./settings.js";
+import { DEFAULT_SETTINGS, wantsAutomaticChecks } from "./settings.js";
 
 // One chrome.storage.session key per tab, so updates for different tabs never
 // overwrite each other.
@@ -21,32 +17,6 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
   if (Object.keys(missing).length > 0) {
     await chrome.storage.local.set(missing);
-  }
-  await updateActionBadge();
-});
-
-// Automatic notifications enabled without access to the sites do nothing, so
-// the toolbar icon says so until the user allows it from the popup (the
-// permission prompt needs a user gesture, it cannot be shown from here).
-async function updateActionBadge() {
-  const settings = await chrome.storage.local.get(DEFAULT_SETTINGS);
-  const granted = await chrome.permissions.contains(HOST_PERMISSIONS);
-  const missingAccess = wantsAutomaticChecks(settings) && !granted;
-  await chrome.action.setBadgeBackgroundColor({ color: "#b06000" });
-  await chrome.action.setBadgeText({ text: missingAccess ? "!" : "" });
-  await chrome.action.setTitle({
-    title: chrome.i18n.getMessage(
-      missingAccess ? "permissionNeeded" : "actionTitle"
-    ),
-  });
-}
-
-chrome.runtime.onStartup.addListener(updateActionBadge);
-chrome.permissions.onAdded.addListener(updateActionBadge);
-chrome.permissions.onRemoved.addListener(updateActionBadge);
-chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "local") {
-    updateActionBadge();
   }
 });
 
@@ -110,11 +80,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
   const settings = await chrome.storage.local.get(DEFAULT_SETTINGS);
   if (!wantsAutomaticChecks(settings)) {
-    return;
-  }
-  // activeTab can give temporary access to a single tab (the popup was
-  // opened on it); automatic checks only run with the access the user granted.
-  if (!(await chrome.permissions.contains(HOST_PERMISSIONS))) {
     return;
   }
 

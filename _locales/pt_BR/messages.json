@@ -45,6 +45,10 @@
     "message": "Tudo usa HTTPS nesta página.",
     "description": "Resultado quando a verificação manual não encontra problemas."
   },
+  "checkResultPartial": {
+    "message": "Nenhum problema encontrado nas partes da página que puderam ser verificadas (alguns frames não puderam).",
+    "description": "Resultado mostrado quando a verificação manual não encontrou problemas, mas não conseguiu inspecionar todos os frames da página."
+  },
   "checkNotPossible": {
     "message": "Esta página não pode ser verificada.",
     "description": "Resultado quando a aba ativa não pode ser verificada (por exemplo, páginas do navegador)."
@@ -52,6 +56,10 @@
   "resourcesNotChecked": {
     "message": "Não foi possível verificar os recursos da página.",
     "description": "Resultado quando a verificação de recursos falhou na aba ativa."
+  },
+  "framesNotChecked": {
+    "message": "Não foi possível verificar alguns frames da página.",
+    "description": "Resultado mostrado quando a verificação manual inspecionou a página, mas não todos os seus frames."
   },
   "issueInsecureResources": {
     "message": "$COUNT$ recurso(s) (imagens, scripts, estilos, frames…) carregados por HTTP.",
@@ -82,13 +90,5 @@
         "example": "3"
       }
     }
-  },
-  "permissionNeeded": {
-    "message": "As notificações automáticas precisam de acesso aos sites que você visita. A verificação manual funciona sem ele.",
-    "description": "Aviso no popup (e na dica do ícone) quando as notificações automáticas estão ativadas, mas o acesso aos sites não foi concedido."
-  },
-  "grantPermission": {
-    "message": "Permitir acesso aos sites",
-    "description": "Botão que pede ao Chrome acesso aos sites."
   }
 }

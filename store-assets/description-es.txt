@@ -7,13 +7,13 @@ POR QUÉ TE VA A ENCANTAR
 ✔ Alertas al instante — recibe una notificación de escritorio cuando una página no usa HTTPS.
 ✔ Revisión a fondo — detecta imágenes, scripts, estilos, marcos, multimedia y formularios que usan HTTP inseguro, incluso dentro de marcos o cargados por scripts, y enlaces a páginas HTTP, y te dice exactamente cuántos de cada tipo encontró.
 ✔ Revisión bajo demanda — revisa la página en la que estás en cualquier momento con un clic desde el popup.
-✔ Tú tienes el control — activa o desactiva cada tipo de alerta con un clic desde el popup. El acceso a los sitios solo se pide cuando activas las alertas automáticas, y se libera cuando las desactivas.
+✔ Tú tienes el control — activa o desactiva cada tipo de alerta con un clic desde el popup.
 ✔ Habla tu idioma — disponible en español, inglés, francés y portugués, adaptándose automáticamente a tu navegador.
 ✔ Ligera y privada — sin cuentas, sin recopilación de datos, sin rastreo. Todo funciona localmente en tu navegador.
 
 CÓMO FUNCIONA
 
-1. Instala la extensión y, desde su popup, permite el acceso a los sitios para que revise cada página automáticamente (la revisión bajo demanda funciona sin él).
+1. Instala la extensión: no requiere configuración.
 2. Navega como siempre.
 3. Si una página o alguno de sus recursos no usa HTTPS, recibirás una notificación con los detalles.
 

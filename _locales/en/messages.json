@@ -45,6 +45,10 @@
     "message": "Everything uses HTTPS on this page.",
     "description": "Result shown when the manual check finds no issues."
   },
+  "checkResultPartial": {
+    "message": "No issues found in the parts of the page that could be checked (some frames could not be).",
+    "description": "Result shown when the manual check found no issues but could not inspect every frame of the page."
+  },
   "checkNotPossible": {
     "message": "This page cannot be checked.",
     "description": "Result shown when the active tab cannot be checked (e.g. browser pages)."
@@ -52,6 +56,10 @@
   "resourcesNotChecked": {
     "message": "The page resources could not be checked.",
     "description": "Result shown when the resource check failed on the active tab."
+  },
+  "framesNotChecked": {
+    "message": "Some frames of the page could not be checked.",
+    "description": "Result shown when the manual check could inspect the page but not all of its frames."
   },
   "issueInsecureResources": {
     "message": "$COUNT$ resource(s) (images, scripts, styles, frames…) load over HTTP.",
@@ -82,13 +90,5 @@
         "example": "3"
       }
     }
-  },
-  "permissionNeeded": {
-    "message": "Automatic notifications need access to the sites you visit. The manual check works without it.",
-    "description": "Notice in the popup (and icon tooltip) when automatic notifications are enabled but site access was not granted."
-  },
-  "grantPermission": {
-    "message": "Allow access to sites",
-    "description": "Button that asks Chrome for access to the sites."
   }
 }

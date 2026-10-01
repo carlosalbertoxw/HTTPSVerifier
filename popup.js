@@ -1,10 +1,6 @@
 import { describeIssues } from "./issues.js";
 import { inspectTab } from "./page-check.js";
-import {
-  DEFAULT_SETTINGS,
-  HOST_PERMISSIONS,
-  wantsAutomaticChecks,
-} from "./settings.js";
+import { DEFAULT_SETTINGS } from "./settings.js";
 
 // Fill in the localized texts
 document.documentElement.lang = chrome.i18n.getUILanguage();
@@ -18,58 +14,18 @@ const checkboxes = {
   toggleNotificationsLINKS: "enableNotificationsLINKS",
 };
 
-const permissionNotice = document.getElementById("permissionNotice");
-
-// Shown when automatic notifications are enabled but the user has not
-// granted (or has since revoked) access to the sites.
-async function refreshPermissionNotice() {
-  const settings = await chrome.storage.local.get(DEFAULT_SETTINGS);
-  const granted = await chrome.permissions.contains(HOST_PERMISSIONS);
-  permissionNotice.hidden = granted || !wantsAutomaticChecks(settings);
-}
-
 const settings = await chrome.storage.local.get(DEFAULT_SETTINGS);
 
 for (const [checkboxId, settingKey] of Object.entries(checkboxes)) {
   const checkbox = document.getElementById(checkboxId);
   checkbox.checked = settings[settingKey];
-  checkbox.addEventListener("change", async (event) => {
-    const enabled = event.target.checked;
-    if (enabled) {
-      // The request must start inside the click (Chrome only prompts on a
-      // user gesture). The setting is saved before waiting for the answer
-      // because the popup can close while the prompt is open.
-      const request = chrome.permissions.request(HOST_PERMISSIONS);
-      await chrome.storage.local.set({ [settingKey]: true });
-      if (!(await request)) {
-        event.target.checked = false;
-        await chrome.storage.local.set({ [settingKey]: false });
-      }
-    } else {
-      await chrome.storage.local.set({ [settingKey]: false });
-      // Nothing automatic left to do: give the access back.
-      const current = await chrome.storage.local.get(DEFAULT_SETTINGS);
-      if (!wantsAutomaticChecks(current)) {
-        await chrome.permissions.remove(HOST_PERMISSIONS);
-      }
-    }
-    await refreshPermissionNotice();
+  checkbox.addEventListener("change", (event) => {
+    chrome.storage.local.set({ [settingKey]: event.target.checked });
   });
 }
 
-document
-  .getElementById("grantPermission")
-  .addEventListener("click", async () => {
-    await chrome.permissions.request(HOST_PERMISSIONS);
-    await refreshPermissionNotice();
-  });
-
-await refreshPermissionNotice();
-
 // Manual check of the active tab: always runs both checks, regardless of the
-// notification toggles and of the notification deduplication. Opening the
-// popup grants activeTab, so it works without access to all sites (frames
-// from other sites are then not inspected).
+// notification toggles and of the notification deduplication.
 const checkButton = document.getElementById("checkNow");
 const checkResult = document.getElementById("checkResult");
 
@@ -89,25 +45,40 @@ checkButton.addEventListener("click", async () => {
   }
 });
 
+function localize([messageKey, substitutions]) {
+  return chrome.i18n.getMessage(messageKey, substitutions);
+}
+
 function renderResult(inspection) {
-  let lines = [];
-  let tone = "warn";
+  let tone;
+  let lines;
 
   if (!inspection) {
     tone = "muted";
-    lines.push(chrome.i18n.getMessage("checkNotPossible"));
+    lines = [chrome.i18n.getMessage("checkNotPossible")];
   } else {
-    lines = describeIssues(inspection, { includePage: true }).map(
-      ([messageKey, substitutions]) =>
-        chrome.i18n.getMessage(messageKey, substitutions)
-    );
+    const issues = describeIssues(inspection, { includePage: true });
+    // "Could not check" is reported apart from the issues: it must never read
+    // as "everything uses HTTPS".
+    const notes = [];
     if (inspection.insecureCounts === null) {
-      lines.push(chrome.i18n.getMessage("resourcesNotChecked"));
+      notes.push(["resourcesNotChecked", []]);
+    } else if (inspection.partial) {
+      notes.push([
+        issues.length > 0 ? "framesNotChecked" : "checkResultPartial",
+        [],
+      ]);
     }
-    if (lines.length === 0) {
+
+    if (issues.length > 0) {
+      tone = "warn";
+    } else if (notes.length > 0) {
+      tone = "muted";
+    } else {
       tone = "ok";
-      lines.push(chrome.i18n.getMessage("checkResultOk"));
+      issues.push(["checkResultOk", []]);
     }
+    lines = [...issues, ...notes].map(localize);
   }
 
   checkResult.className = tone;

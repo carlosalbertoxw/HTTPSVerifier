@@ -45,6 +45,10 @@
     "message": "Tout utilise HTTPS sur cette page.",
     "description": "Résultat lorsque la vérification manuelle ne trouve aucun problème."
   },
+  "checkResultPartial": {
+    "message": "Aucun problème trouvé dans les parties de la page qui ont pu être vérifiées (certains cadres n'ont pas pu l'être).",
+    "description": "Résultat affiché lorsque la vérification manuelle n'a trouvé aucun problème mais n'a pas pu inspecter tous les cadres de la page."
+  },
   "checkNotPossible": {
     "message": "Cette page ne peut pas être vérifiée.",
     "description": "Résultat lorsque l'onglet actif ne peut pas être vérifié (p. ex. pages du navigateur)."
@@ -52,6 +56,10 @@
   "resourcesNotChecked": {
     "message": "Impossible de vérifier les ressources de la page.",
     "description": "Résultat lorsque la vérification des ressources a échoué sur l'onglet actif."
+  },
+  "framesNotChecked": {
+    "message": "Certains cadres de la page n'ont pas pu être vérifiés.",
+    "description": "Résultat affiché lorsque la vérification manuelle a pu inspecter la page mais pas tous ses cadres."
   },
   "issueInsecureResources": {
     "message": "$COUNT$ ressource(s) (images, scripts, styles, cadres…) chargée(s) en HTTP.",
@@ -82,13 +90,5 @@
         "example": "3"
       }
     }
-  },
-  "permissionNeeded": {
-    "message": "Les notifications automatiques nécessitent l'accès aux sites que vous visitez. La vérification manuelle fonctionne sans cet accès.",
-    "description": "Avis dans le popup (et l'info-bulle de l'icône) lorsque les notifications automatiques sont activées mais que l'accès aux sites n'a pas été accordé."
-  },
-  "grantPermission": {
-    "message": "Autoriser l'accès aux sites",
-    "description": "Bouton qui demande à Chrome l'accès aux sites."
   }
 }

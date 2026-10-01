@@ -12,11 +12,17 @@ const HTTPS_BASE = "https://example.com/section/page.html";
 const HTTP_BASE = "http://example.com/section/page.html";
 
 test("absolute http URLs are insecure", () => {
-  assert.equal(isInsecureUrl("http://cdn.example.com/app.js", HTTPS_BASE), true);
+  assert.equal(
+    isInsecureUrl("http://cdn.example.com/app.js", HTTPS_BASE),
+    true
+  );
 });
 
 test("absolute https URLs are secure", () => {
-  assert.equal(isInsecureUrl("https://cdn.example.com/app.js", HTTPS_BASE), false);
+  assert.equal(
+    isInsecureUrl("https://cdn.example.com/app.js", HTTPS_BASE),
+    false
+  );
 });
 
 test("relative URLs inherit the page protocol", () => {
