@@ -13,7 +13,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build": "node scripts/build.mjs",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "test-page": "node tests/manual/server.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

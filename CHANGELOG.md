@@ -7,6 +7,12 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Tooling
+- Manual test page with a known expected result: `npm run test-page`, then
+  open http://localhost:8080/ (see "Manual test page" in the README).
+- README section on known detection limitations, such as resources loaded by
+  stylesheets from another site.
+
 ## [1.4.0] - 2026-10-01
 
 The permissions are the same as in 1.3.0, so updating does not show any new
