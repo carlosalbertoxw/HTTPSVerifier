@@ -83,7 +83,9 @@ function checkReferences(files) {
   }
 
   if (missing.length > 0) {
-    throw new Error(`Files referenced but not packaged:\n  ${missing.join("\n  ")}`);
+    throw new Error(
+      `Files referenced but not packaged:\n  ${missing.join("\n  ")}`
+    );
   }
   return manifest;
 }
@@ -165,7 +167,11 @@ function createZip(files) {
 
 const files = PACKAGE_ENTRIES.flatMap(listFiles);
 const manifest = checkReferences(files);
-const output = path.join(ROOT, "dist", `https-verifier-${manifest.version}.zip`);
+const output = path.join(
+  ROOT,
+  "dist",
+  `https-verifier-${manifest.version}.zip`
+);
 
 mkdirSync(path.dirname(output), { recursive: true });
 writeFileSync(output, createZip(files));

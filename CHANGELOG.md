@@ -7,12 +7,10 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+The permissions are the same as in 1.3.0, so updating does not show any new
+permission warning.
+
 ### Changed
-- Access to all sites is now optional (`optional_host_permissions`). The popup
-  requests it when an automatic notification is enabled and releases it when
-  both are turned off. "Check this page now" works without it through
-  `activeTab`. Users without access see a "!" badge on the toolbar icon and an
-  "Allow access to sites" button in the popup.
 - Issues are reported per kind: resources loaded over HTTP, forms that send data
   over HTTP, and links to HTTP pages, instead of a single "link(s) or
   resource(s)" count.
@@ -29,6 +27,9 @@ All notable changes to this project are documented here. The format is based on
 - Inspection of every frame of the page, not only the top one.
 - `minimum_chrome_version` 102 in the manifest (required by
   `chrome.storage.session`).
+- If the page cannot be injected into every frame, the top frame is still
+  checked, and the popup says that some frames could not be checked instead of
+  "everything uses HTTPS".
 
 ### Fixed
 - Duplicate notifications when several tabs finished loading at the same time
@@ -42,8 +43,10 @@ All notable changes to this project are documented here. The format is based on
   on `v*` tags), CodeQL and Dependabot.
 - `npm run build` creates the Chrome Web Store ZIP from a single file list and
   fails if a packaged file references one that is not packaged.
-- ESLint, `.editorconfig`, more unit tests (service worker logic, frame
-  merging, locale consistency).
+- ESLint, Prettier, `.editorconfig`, more unit tests (the service worker
+  driven through its events, frame merging, locale consistency, permissions).
+- Tags with a suffix (`v1.4.0-rc.1`) create a GitHub pre-release, to rehearse
+  a release.
 
 ## [1.3.0] - 2026-08-05
 

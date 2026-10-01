@@ -16,6 +16,7 @@ Requirements: Node.js 20.19, 22.13 or 24+, and Chrome 102 or later.
 ```
 npm ci
 npm run lint
+npm run format  # Prettier; CI runs npm run format:check
 npm test
 npm run build   # creates dist/https-verifier-<version>.zip
 ```
@@ -25,7 +26,11 @@ To try the extension, load the project folder from `chrome://extensions` with
 
 ## What a change needs
 
-- `npm run lint` and `npm test` pass (CI runs both on every pull request).
+- `npm run lint`, `npm run format:check` and `npm test` pass (CI runs them on
+  every pull request).
+- Permissions in `manifest.json` do not change without a discussion first: any
+  new permission disables the extension for existing users until they accept
+  it (see "Permissions" in the README).
 - New logic comes with unit tests. Keep the logic in pure modules
   (`insecure-url.js`, `issues.js`) so it can be tested without Chrome.
 - New user-facing texts are added to **all** locales in `_locales/`. A test

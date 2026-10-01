@@ -24,9 +24,15 @@ From the popup you can:
 
 ### Permissions
 
-Access to all sites is **optional**. The automatic notifications need it, because they check every page you visit, so the popup asks Chrome for it when you enable one of them. If both are turned off, the extension gives the access back. When notifications are enabled without access (for example right after installing, or after revoking it in `chrome://extensions`), the toolbar icon shows a **!** badge and the popup offers an **Allow access to sites** button.
+The extension asks for access to all `http://` and `https://` sites at install time (`host_permissions`). This is a deliberate decision:
 
-**Check this page now** works without that access: opening the popup grants the [`activeTab`](https://developer.chrome.com/docs/extensions/develop/concepts/activeTab) permission for the current tab only. In that mode, frames embedded from other sites are not inspected, although their own address is still checked.
+- **Why:** the main feature is checking every page you visit automatically, so almost every user would need that access anyway.
+- **Alternative considered (and reverted):** making the access optional (`optional_host_permissions`) and requesting it from the popup, with `activeTab` for the manual check. It avoids the install warning, but it added permission prompts, a "missing access" badge and notice, and it broke the automatic notifications for users who restrict the extension to specific sites from Chrome's site access menu.
+- **What the access is used for:** only to read the URLs of the page's resources, forms and links, locally. See the [privacy policy](PRIVACY.md).
+
+You can still limit the extension to specific sites from Chrome's site access menu: the automatic checks then run only on those sites.
+
+If an injection into some frame of the page fails, the page itself is still checked and the popup says that some frames could not be checked, instead of reporting that everything uses HTTPS.
 
 Requires Chrome 102 or later. Everything runs locally: see the [privacy policy](PRIVACY.md).
 
@@ -67,9 +73,10 @@ Requirements: Node.js 20.19, 22.13 or 24+ (for the tooling only; the extension h
 3. Click **Load unpacked** and select the project folder.
 
 ```
-npm run lint   # ESLint
-npm test       # unit tests (node:test)
-npm run build  # dist/https-verifier-<version>.zip
+npm run lint          # ESLint
+npm run format:check  # Prettier (npm run format to fix)
+npm test              # unit tests (node:test)
+npm run build         # dist/https-verifier-<version>.zip
 ```
 
 CI runs the same commands on every push and pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the conventions and [CHANGELOG.md](CHANGELOG.md) for the version history.
@@ -82,7 +89,7 @@ CI runs the same commands on every push and pull request. See [CONTRIBUTING.md](
 npm run build
 ```
 
-This creates `dist/https-verifier-<version>.zip` with `manifest.json` at the root and **only the files the extension needs at runtime** (the list is `PACKAGE_ENTRIES` in `scripts/build.mjs`). The build fails if a packaged file references another file that is not packaged. Pushing a `v<version>` tag also builds it in CI and attaches it to a GitHub release.
+This creates `dist/https-verifier-<version>.zip` with `manifest.json` at the root and **only the files the extension needs at runtime** (the list is `PACKAGE_ENTRIES` in `scripts/build.mjs`). The build fails if a packaged file references another file that is not packaged. Pushing a `v<version>` tag also builds it in CI and attaches it to a GitHub release. To rehearse a release, push a tag with a suffix such as `v1.4.0-rc.1` (with `1.4.0` in the manifest): it is published as a pre-release that you can delete afterwards.
 
 Before packaging, make sure the `version` in `manifest.json` (and `package.json`) is **higher** than the one currently published, because the store rejects uploads with the same or a lower version. Tag every published version (`git tag v1.3.0`): the store has no rollback, so going back means republishing the code of an older tag with a higher version number.
 
@@ -97,17 +104,14 @@ Before packaging, make sure the `version` in `manifest.json` (and `package.json`
 
 In the **Privacy** tab you must justify every permission. For this extension:
 
-- `activeTab` + `scripting`: the on-demand check reads the URLs of the resources, forms and links of the current tab, only when the user opens the popup.
-- Optional host permissions (`http://*/*`, `https://*/*`): requested at runtime only if the user enables the automatic notifications, which check every visited page. They are released when both notifications are turned off.
+- `scripting` + host permissions (`http://*/*`, `https://*/*`): needed to read the URLs of the resources, forms and links of the visited page to verify they use HTTPS.
 - `notifications`: needed to alert the user about insecure pages/resources.
 - `storage`: stores the user's notification preferences locally.
 - Data usage: the extension collects **no** user data, and everything runs locally. Link the [privacy policy](PRIVACY.md) as the privacy policy URL.
 
 ### 4. Submit for review
 
-Click **Submit for review**. Review usually takes from a few hours to a few days. Once approved, the new version rolls out automatically to existing users.
-
-> Note for the release that makes host permissions optional: check in a real update (not only a fresh install) whether existing users keep their access. If Chrome drops it, they will see the **!** badge and must allow access once from the popup. Mention this in the release notes.
+Click **Submit for review**. Review usually takes from a few hours to a few days, and broad host permissions can make it take longer. Once approved, the new version rolls out automatically to existing users.
 
 ## Security
 
