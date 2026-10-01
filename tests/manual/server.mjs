@@ -125,10 +125,10 @@ function handler(req, res) {
     res.writeHead(200, { "content-type": "image/png" });
     return res.end(PNG);
   }
-  res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-  res.end(
-    `<!doctype html><meta charset="utf-8"><p>${path}</p><a href="${PAGE}/">Back</a>`
-  );
+  // Any other path (the test links) gets a placeholder page. Plain text, so
+  // the requested path is never interpreted as HTML.
+  res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
+  res.end(`${path}\n\nBack to the test page: ${PAGE}/\n`);
 }
 
 http.createServer(handler).listen(8080, "localhost");
