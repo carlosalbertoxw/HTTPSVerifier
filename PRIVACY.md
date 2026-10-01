@@ -1,6 +1,6 @@
 # Privacy policy
 
-_Last updated: 2026-09-30_
+_Last updated: 2026-10-01_
 
 HTTPS Verifier does not collect, sell or share any data. Everything it does
 happens locally in your browser, and it makes no network requests of its own.

@@ -7,6 +7,8 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-01
+
 The permissions are the same as in 1.3.0, so updating does not show any new
 permission warning.
 
@@ -46,7 +48,9 @@ permission warning.
 - ESLint, Prettier, `.editorconfig`, more unit tests (the service worker
   driven through its events, frame merging, locale consistency, permissions).
 - Tags with a suffix (`v1.4.0-rc.1`) create a GitHub pre-release, to rehearse
-  a release.
+  a release. GitHub releases take their notes from this changelog.
+- Store screenshots regenerated at 1280×800 with `npm run screenshots`, from
+  the texts in `_locales`; the language screenshot now includes Portuguese.
 
 ## [1.3.0] - 2026-08-05
 
@@ -84,7 +88,8 @@ permission warning.
   or when links, images, stylesheets or scripts use `http://`, with a popup to
   enable each notification type.
 
-[Unreleased]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.0.1...v1.2.0
 [1.0.1]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/1.0.0...v1.0.1
