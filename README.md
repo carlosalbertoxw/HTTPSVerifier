@@ -60,7 +60,7 @@ Translations live in the `_locales/<lang>/messages.json` files. To add a new lan
 
 ## Development
 
-Requirements: Node.js 20 or later (for the tooling only; the extension has no runtime dependencies).
+Requirements: Node.js 20.19, 22.13 or 24+ (for the tooling only; the extension has no runtime dependencies).
 
 1. Clone this repository and run `npm ci`.
 2. Open `chrome://extensions` in Chrome and enable **Developer mode**.

@@ -11,7 +11,7 @@ Thanks for your interest in HTTPS Verifier.
 
 ## Development
 
-Requirements: Node.js 20 or later, and Chrome 102 or later.
+Requirements: Node.js 20.19, 22.13 or 24+, and Chrome 102 or later.
 
 ```
 npm ci
