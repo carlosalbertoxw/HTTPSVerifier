@@ -37,6 +37,10 @@ function storageGet(area, query) {
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 5));
 
+// The only fake call that waits on a timer; everything else resolves in
+// microtasks.
+let pendingReads = 0;
+
 globalThis.chrome = {
   runtime: { onInstalled: event("onInstalled") },
   tabs: { onRemoved: event("onRemoved"), onUpdated: event("onUpdated") },
@@ -49,9 +53,14 @@ globalThis.chrome = {
       // A read that takes time to come back (value taken before the delay)
       // makes interleaved check-then-set bugs show up.
       get: async (query) => {
-        const value = storageGet(state.session, query);
-        await tick();
-        return value;
+        pendingReads++;
+        try {
+          const value = storageGet(state.session, query);
+          await tick();
+          return value;
+        } finally {
+          pendingReads--;
+        }
       },
       set: async (values) => Object.assign(state.session, values),
       remove: async (key) => {
@@ -77,8 +86,16 @@ await import("../background.js");
 
 beforeEach(resetState);
 
-// Lets the queued notification work finish.
-const settle = () => new Promise((resolve) => setTimeout(resolve, 60));
+// Lets the queued notification work finish: waits until no storage read has
+// been pending for a few turns of the event loop (each finished read can
+// start the next queued task). No fixed delay, so a slow machine cannot make
+// the tests fail.
+async function settle() {
+  for (let idleTurns = 0; idleTurns < 3;) {
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    idleTurns = pendingReads === 0 ? idleTurns + 1 : 0;
+  }
+}
 
 function complete(tabId, url) {
   return listeners.onUpdated(tabId, { status: "complete" }, { id: tabId, url });
