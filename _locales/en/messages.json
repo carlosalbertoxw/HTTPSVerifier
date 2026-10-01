@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extDescription": {
-    "message": "Browse with confidence: get instant alerts when a page or its links, images, styles, or scripts don't use secure HTTPS.",
+    "message": "Browse with confidence: get instant alerts when a page or its resources, forms, or links don't use secure HTTPS.",
     "description": "Description of the extension."
   },
   "actionTitle": {
@@ -20,8 +20,8 @@
     "description": "Label of the checkbox that toggles page URL notifications."
   },
   "enableLinkNotifications": {
-    "message": "Notify when links or resources do not use HTTPS",
-    "description": "Label of the checkbox that toggles link/resource notifications."
+    "message": "Notify when resources, forms or links do not use HTTPS",
+    "description": "Label of the checkbox that toggles resource/form/link notifications."
   },
   "notificationTitle": {
     "message": "HTTPS issues on $URL$",
@@ -54,13 +54,41 @@
     "description": "Result shown when the resource check failed on the active tab."
   },
   "issueInsecureResources": {
-    "message": "$COUNT$ link(s) or resource(s) do not use HTTPS.",
-    "description": "Notification line shown when links or resources are not served over HTTPS.",
+    "message": "$COUNT$ resource(s) (images, scripts, styles, frames…) load over HTTP.",
+    "description": "Notification line shown when resources loaded by the page (images, scripts, styles, frames, media) are not served over HTTPS.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "3"
       }
     }
+  },
+  "issueInsecureForms": {
+    "message": "$COUNT$ form(s) send data over HTTP.",
+    "description": "Notification line shown when forms on the page submit their data over HTTP.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "issueInsecureLinks": {
+    "message": "$COUNT$ link(s) point to HTTP pages.",
+    "description": "Notification line shown when links on the page point to HTTP pages.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "permissionNeeded": {
+    "message": "Automatic notifications need access to the sites you visit. The manual check works without it.",
+    "description": "Notice in the popup (and icon tooltip) when automatic notifications are enabled but site access was not granted."
+  },
+  "grantPermission": {
+    "message": "Allow access to sites",
+    "description": "Button that asks Chrome for access to the sites."
   }
 }

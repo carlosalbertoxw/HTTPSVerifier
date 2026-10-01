@@ -4,7 +4,7 @@
     "description": "Nombre de la extensión."
   },
   "extDescription": {
-    "message": "Navega con confianza: recibe alertas al instante cuando una página o sus enlaces, imágenes, estilos o scripts no usan HTTPS.",
+    "message": "Navega con confianza: recibe alertas al instante cuando una página o sus recursos, formularios o enlaces no usan HTTPS.",
     "description": "Descripción de la extensión."
   },
   "actionTitle": {
@@ -20,8 +20,8 @@
     "description": "Etiqueta del checkbox que activa las notificaciones de la URL de la página."
   },
   "enableLinkNotifications": {
-    "message": "Notificar cuando los enlaces o recursos no usen HTTPS",
-    "description": "Etiqueta del checkbox que activa las notificaciones de enlaces/recursos."
+    "message": "Notificar cuando los recursos, formularios o enlaces no usen HTTPS",
+    "description": "Etiqueta del checkbox que activa las notificaciones de recursos/formularios/enlaces."
   },
   "notificationTitle": {
     "message": "Problemas de HTTPS en $URL$",
@@ -54,13 +54,41 @@
     "description": "Resultado cuando la revisión de recursos falló en la pestaña activa."
   },
   "issueInsecureResources": {
-    "message": "$COUNT$ enlace(s) o recurso(s) no usan HTTPS.",
-    "description": "Línea de la notificación cuando hay enlaces o recursos sin HTTPS.",
+    "message": "$COUNT$ recurso(s) (imágenes, scripts, estilos, marcos…) se cargan por HTTP.",
+    "description": "Línea de la notificación cuando hay recursos cargados por la página (imágenes, scripts, estilos, marcos, multimedia) sin HTTPS.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "3"
       }
     }
+  },
+  "issueInsecureForms": {
+    "message": "$COUNT$ formulario(s) envían datos por HTTP.",
+    "description": "Línea de la notificación cuando hay formularios que envían sus datos por HTTP.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "issueInsecureLinks": {
+    "message": "$COUNT$ enlace(s) apuntan a páginas HTTP.",
+    "description": "Línea de la notificación cuando hay enlaces que apuntan a páginas HTTP.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "permissionNeeded": {
+    "message": "Las notificaciones automáticas necesitan acceso a los sitios que visitas. La revisión manual funciona sin él.",
+    "description": "Aviso en el popup (y en el tooltip del icono) cuando las notificaciones automáticas están activas pero no se concedió acceso a los sitios."
+  },
+  "grantPermission": {
+    "message": "Permitir acceso a los sitios",
+    "description": "Botón que pide a Chrome acceso a los sitios."
   }
 }

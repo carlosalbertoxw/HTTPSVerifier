@@ -4,7 +4,7 @@
     "description": "Nom de l'extension."
   },
   "extDescription": {
-    "message": "Naviguez en toute confiance : soyez alerté quand une page ou ses liens, images, styles ou scripts n'utilisent pas HTTPS.",
+    "message": "Naviguez en toute confiance : soyez alerté quand une page ou ses ressources, formulaires ou liens n'utilisent pas HTTPS.",
     "description": "Description de l'extension."
   },
   "actionTitle": {
@@ -20,8 +20,8 @@
     "description": "Libellé de la case à cocher pour les notifications de l'URL de la page."
   },
   "enableLinkNotifications": {
-    "message": "Notifier lorsque des liens ou des ressources n'utilisent pas HTTPS",
-    "description": "Libellé de la case à cocher pour les notifications des liens/ressources."
+    "message": "Notifier lorsque des ressources, formulaires ou liens n'utilisent pas HTTPS",
+    "description": "Libellé de la case qui active les notifications de ressources/formulaires/liens."
   },
   "notificationTitle": {
     "message": "Problèmes HTTPS sur $URL$",
@@ -54,13 +54,41 @@
     "description": "Résultat lorsque la vérification des ressources a échoué sur l'onglet actif."
   },
   "issueInsecureResources": {
-    "message": "$COUNT$ lien(s) ou ressource(s) n'utilisent pas HTTPS.",
-    "description": "Ligne de notification lorsque des liens ou ressources ne sont pas en HTTPS.",
+    "message": "$COUNT$ ressource(s) (images, scripts, styles, cadres…) chargée(s) en HTTP.",
+    "description": "Ligne de la notification lorsque des ressources chargées par la page (images, scripts, styles, cadres, médias) n’utilisent pas HTTPS.",
     "placeholders": {
       "count": {
         "content": "$1",
         "example": "3"
       }
     }
+  },
+  "issueInsecureForms": {
+    "message": "$COUNT$ formulaire(s) envoient des données en HTTP.",
+    "description": "Ligne de la notification lorsque des formulaires envoient leurs données en HTTP.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "issueInsecureLinks": {
+    "message": "$COUNT$ lien(s) pointent vers des pages HTTP.",
+    "description": "Ligne de la notification lorsque des liens pointent vers des pages HTTP.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "permissionNeeded": {
+    "message": "Les notifications automatiques nécessitent l'accès aux sites que vous visitez. La vérification manuelle fonctionne sans cet accès.",
+    "description": "Avis dans le popup (et l'info-bulle de l'icône) lorsque les notifications automatiques sont activées mais que l'accès aux sites n'a pas été accordé."
+  },
+  "grantPermission": {
+    "message": "Autoriser l'accès aux sites",
+    "description": "Bouton qui demande à Chrome l'accès aux sites."
   }
 }

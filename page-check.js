@@ -1,62 +1,103 @@
-import { isInsecureUrl } from "./insecure-url.js";
+import {
+  collectInsecureUrls,
+  countFindings,
+  emptyFindings,
+} from "./insecure-url.js";
 
-// Collects the candidate URLs from the page. Classification happens in the
-// extension context (see insecure-url.js) so it can be unit tested.
-function collectPageUrls(tab) {
-  return new Promise((resolve) => {
-    chrome.scripting.executeScript(
-      {
-        target: { tabId: tab.id },
-        func: () => {
-          const selector =
-            "a[href], img[src], link[href][rel='stylesheet'], script[src]";
-          const urls = [];
-          document.querySelectorAll(selector).forEach((element) => {
-            const attribute = element.hasAttribute("src") ? "src" : "href";
-            const value = element.getAttribute(attribute);
-            if (value) {
-              urls.push(value);
-            }
-          });
-          return { baseUri: document.baseURI, urls: urls };
-        },
-      },
-      (results) => {
-        if (chrome.runtime.lastError) {
-          // "Could not check" is not the same as "no issues": leave a trace.
-          console.debug(
-            `HTTPS Verifier: could not inspect ${tab.url}: ` +
-              chrome.runtime.lastError.message
-          );
-          resolve(null);
-          return;
+// Runs inside every frame of the inspected page and returns the raw URLs,
+// grouped by kind. Classification happens in the extension context (see
+// insecure-url.js) so it can be unit tested. This function is serialized and
+// injected, so it must be self-contained: no imports, no outer variables.
+function collectFrameUrls() {
+  const selectors = {
+    resources: [
+      [
+        "img[src], script[src], iframe[src], frame[src], embed[src], " +
+          "video[src], audio[src], source[src], track[src], " +
+          "input[type='image' i][src]",
+        "src",
+      ],
+      ["img[srcset], source[srcset]", "srcset"],
+      ["video[poster]", "poster"],
+      ["object[data]", "data"],
+      [
+        "link[href][rel~='stylesheet' i], link[href][rel~='icon' i], " +
+          "link[href][rel~='preload' i], link[href][rel~='modulepreload' i], " +
+          "link[href][rel~='manifest' i]",
+        "href",
+      ],
+    ],
+    forms: [
+      ["form[action]", "action"],
+      ["button[formaction], input[formaction]", "formaction"],
+    ],
+    links: [["a[href], area[href]", "href"]],
+  };
+
+  const entries = [];
+  for (const [kind, groups] of Object.entries(selectors)) {
+    for (const [selector, attribute] of groups) {
+      document.querySelectorAll(selector).forEach((element) => {
+        const value = element.getAttribute(attribute);
+        if (value) {
+          entries.push({ kind, value, srcset: attribute === "srcset" });
         }
-        resolve(results && results.length ? results[0].result : null);
-      }
-    );
-  });
+      });
+    }
+  }
+
+  // What the page actually requested: also covers CSS url(), fonts and
+  // resources added by scripts after the markup was parsed.
+  for (const entry of performance.getEntriesByType("resource")) {
+    entries.push({ kind: "resources", value: entry.name, srcset: false });
+  }
+
+  return { documentUrl: location.href, baseUri: document.baseURI, entries };
 }
 
 // Inspects a tab for HTTPS issues. Returns null when the tab cannot be
-// checked at all (e.g. chrome:// pages). In the result, insecureCount is
-// null when the resources were not checked (skipped or injection failed).
-export async function inspectTab(tab, { includeResources }) {
+// checked at all (e.g. chrome:// pages). In the result, insecureCounts is
+// null when the URLs were not checked (skipped or injection failed).
+export async function inspectTab(tab, { includeUrls }) {
   if (!tab || !tab.url || !tab.url.startsWith("http")) {
     return null;
   }
 
   const inspection = {
     pageInsecure: !tab.url.startsWith("https://"),
-    insecureCount: null,
+    insecureCounts: null,
   };
 
-  if (includeResources) {
-    const page = await collectPageUrls(tab);
-    if (page) {
-      inspection.insecureCount = page.urls.filter((url) =>
-        isInsecureUrl(url, page.baseUri)
-      ).length;
+  if (!includeUrls) {
+    return inspection;
+  }
+
+  let frames;
+  try {
+    frames = await chrome.scripting.executeScript({
+      target: { tabId: tab.id, allFrames: true },
+      func: collectFrameUrls,
+    });
+  } catch (error) {
+    // "Could not check" is not the same as "no issues": leave a trace. Only
+    // the origin, as in the notifications: full URLs can carry secrets.
+    console.debug(
+      `HTTPS Verifier: could not inspect ${new URL(tab.url).origin}: ` +
+        error.message
+    );
+    return inspection;
+  }
+
+  const found = emptyFindings();
+  let checkedFrames = 0;
+  for (const frame of frames || []) {
+    if (frame && frame.result) {
+      collectInsecureUrls(frame.result, found);
+      checkedFrames++;
     }
+  }
+  if (checkedFrames > 0) {
+    inspection.insecureCounts = countFindings(found);
   }
 
   return inspection;

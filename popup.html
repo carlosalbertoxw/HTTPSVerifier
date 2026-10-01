@@ -79,6 +79,25 @@
       cursor: default;
     }
 
+    #permissionNotice {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.5;
+      background-color: #fef7e0;
+      color: #8a4b00;
+    }
+
+    #permissionNotice button {
+      margin-top: 8px;
+      background-color: #b06000;
+    }
+
+    #permissionNotice button:hover {
+      background-color: #8a4b00;
+    }
+
     #checkResult {
       margin-top: 10px;
       padding: 8px 10px;
@@ -119,6 +138,10 @@
       <input type="checkbox" id="toggleNotificationsLINKS" />
       <span data-i18n="enableLinkNotifications"></span>
     </label>
+    <div id="permissionNotice" hidden>
+      <div data-i18n="permissionNeeded"></div>
+      <button id="grantPermission" data-i18n="grantPermission"></button>
+    </div>
     <button id="checkNow" data-i18n="checkNow"></button>
     <div id="checkResult" hidden></div>
   </main>

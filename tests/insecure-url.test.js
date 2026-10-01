@@ -1,6 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { isInsecureUrl } from "../insecure-url.js";
+import {
+  collectInsecureUrls,
+  countFindings,
+  emptyFindings,
+  isInsecureUrl,
+  parseSrcset,
+} from "../insecure-url.js";
 
 const HTTPS_BASE = "https://example.com/section/page.html";
 const HTTP_BASE = "http://example.com/section/page.html";
@@ -51,4 +57,92 @@ test("unresolvable values are not flagged", () => {
 
 test("uppercase scheme is still detected", () => {
   assert.equal(isInsecureUrl("HTTP://EXAMPLE.COM/APP.JS", HTTPS_BASE), true);
+});
+
+test("srcset candidates are split into their URLs", () => {
+  assert.deepEqual(parseSrcset("small.png 1x, large.png 2x"), [
+    "small.png",
+    "large.png",
+  ]);
+  assert.deepEqual(parseSrcset("a.png 480w,b.png 800w"), ["a.png", "b.png"]);
+  assert.deepEqual(parseSrcset("a.png, b.png,"), ["a.png", "b.png"]);
+  // As in the HTML spec, a comma not followed by whitespace is part of the URL.
+  assert.deepEqual(parseSrcset("a.png,b.png"), ["a.png,b.png"]);
+  assert.deepEqual(parseSrcset("data:image/png;base64,AAAA 1x"), [
+    "data:image/png;base64,AAAA",
+  ]);
+  assert.deepEqual(parseSrcset(""), []);
+  assert.deepEqual(parseSrcset(undefined), []);
+});
+
+function page(documentUrl, entries) {
+  return { documentUrl, baseUri: documentUrl, entries };
+}
+
+test("insecure URLs are grouped by kind and counted once", () => {
+  const found = collectInsecureUrls(
+    page(HTTPS_BASE, [
+      { kind: "resources", value: "http://cdn.example.com/app.js" },
+      { kind: "resources", value: "http://cdn.example.com/app.js" },
+      { kind: "resources", value: "https://cdn.example.com/app.css" },
+      { kind: "forms", value: "http://example.com/login" },
+      { kind: "links", value: "http://other.example/#top" },
+      { kind: "links", value: "http://other.example/#bottom" },
+    ])
+  );
+  assert.deepEqual(countFindings(found), { resources: 1, forms: 1, links: 1 });
+});
+
+test("srcset entries contribute every candidate", () => {
+  const found = collectInsecureUrls(
+    page(HTTPS_BASE, [
+      {
+        kind: "resources",
+        value:
+          "http://a.example/1.png 1x, https://a.example/2.png 2x, http://a.example/3.png 3x",
+        srcset: true,
+      },
+    ])
+  );
+  assert.equal(found.resources.size, 2);
+});
+
+test("on an HTTP page, its own origin is not counted again", () => {
+  const found = collectInsecureUrls(
+    page(HTTP_BASE, [
+      { kind: "links", value: "#section" },
+      { kind: "links", value: "/about" },
+      { kind: "resources", value: "images/logo.png" },
+      { kind: "resources", value: "http://cdn.example.net/app.js" },
+    ])
+  );
+  assert.deepEqual(countFindings(found), { resources: 1, forms: 0, links: 0 });
+});
+
+test("findings accumulate across frames", () => {
+  const found = emptyFindings();
+  collectInsecureUrls(
+    page(HTTPS_BASE, [{ kind: "resources", value: "http://a.example/x.js" }]),
+    found
+  );
+  collectInsecureUrls(
+    page("https://frame.example/", [
+      { kind: "resources", value: "http://a.example/x.js" },
+      { kind: "resources", value: "http://b.example/y.js" },
+    ]),
+    found
+  );
+  assert.equal(found.resources.size, 2);
+});
+
+test("unknown kinds and non-http documents are tolerated", () => {
+  const found = collectInsecureUrls({
+    documentUrl: "about:srcdoc",
+    baseUri: HTTPS_BASE,
+    entries: [
+      { kind: "unknown", value: "http://a.example/" },
+      { kind: "resources", value: "http://a.example/x.js" },
+    ],
+  });
+  assert.deepEqual(countFindings(found), { resources: 1, forms: 0, links: 0 });
 });

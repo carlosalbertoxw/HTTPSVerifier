@@ -4,12 +4,14 @@
   "version": "1.3.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
+  "minimum_chrome_version": "102",
   "permissions": [
+    "activeTab",
     "scripting",
     "notifications",
     "storage"
   ],
-  "host_permissions": [
+  "optional_host_permissions": [
     "http://*/*",
     "https://*/*"
   ],
