@@ -98,7 +98,7 @@ Before packaging, make sure the `version` in `manifest.json` (and `package.json`
 1. Open the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole). Publishing requires a developer account with the one-time $5 registration fee.
 2. Select the existing **HTTPS Verifier** item (or **New item** for a first publish) and upload the ZIP under **Package → Upload new package**.
 3. In **Store listing**, fill in the detailed description. The ready-to-paste texts live in `store-assets/description-{en,es,fr,pt_BR}.txt`. Because the extension declares `_locales`, the dashboard lets you provide the listing in each supported language, and the short description under the name is taken automatically from the localized `manifest.json`.
-4. Upload at least one screenshot (640×400 or 1280×800 JPEG/PNG). The ready-made ones live in `store-assets/*.jpg`.
+4. Upload at least one screenshot (640×400 or 1280×800 JPEG/PNG). The ready-made ones live in `store-assets/*.png` (1280×800). They are generated with headless Chrome from the texts in `_locales`, so regenerate them with `npm run screenshots` whenever the popup or the notification texts change (set `CHROME_PATH` if Chrome is not found).
 
 ### 3. Privacy declarations
 
