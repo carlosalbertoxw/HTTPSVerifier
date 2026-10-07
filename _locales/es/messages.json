@@ -62,8 +62,18 @@
     "description": "Resultado cuando la revisión manual pudo inspeccionar la página pero no todos sus marcos."
   },
   "issueInsecureResources": {
-    "message": "$COUNT$ recurso(s) (imágenes, scripts, estilos, marcos…) se cargan por HTTP.",
-    "description": "Línea de la notificación cuando hay recursos cargados por la página (imágenes, scripts, estilos, marcos, multimedia) sin HTTPS.",
+    "message": "$COUNT$ recurso(s) (imágenes, scripts, estilos, marcos…) usan direcciones HTTP.",
+    "description": "Línea de la notificación cuando la página hace referencia a recursos (imágenes, scripts, estilos, marcos, multimedia) con direcciones http://.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "issueMixedResources": {
+    "message": "$COUNT$ recurso(s) (imágenes, scripts, estilos, marcos…) usan direcciones HTTP. Chrome los bloquea o intenta cargarlos por HTTPS.",
+    "description": "Igual que issueInsecureResources, en una página servida por HTTPS: ahí Chrome bloquea esos recursos o los pasa a HTTPS (contenido mixto), así que se referencian por HTTP pero no necesariamente se cargan por HTTP.",
     "placeholders": {
       "count": {
         "content": "$1",

@@ -16,7 +16,7 @@ test("each kind with findings gets its own line, in a fixed order", () => {
     insecureCounts: { resources: 2, forms: 0, links: 5 },
   };
   assert.deepEqual(describeIssues(inspection, { includePage: true }), [
-    ["issueInsecureResources", ["2"]],
+    ["issueMixedResources", ["2"]],
     ["issueInsecureLinks", ["5"]],
   ]);
 });
@@ -27,4 +27,28 @@ test("a secure page has no issues", () => {
     insecureCounts: { resources: 0, forms: 0, links: 0 },
   };
   assert.deepEqual(describeIssues(inspection, { includePage: true }), []);
+});
+
+test("resources on an HTTPS page say that Chrome blocks or upgrades them", () => {
+  const counts = { resources: 3, forms: 1, links: 0 };
+  assert.deepEqual(
+    describeIssues(
+      { pageInsecure: false, insecureCounts: counts },
+      { includePage: true }
+    ),
+    [
+      ["issueMixedResources", ["3"]],
+      ["issueInsecureForms", ["1"]],
+    ]
+  );
+  assert.deepEqual(
+    describeIssues(
+      { pageInsecure: true, insecureCounts: counts },
+      { includePage: false }
+    ),
+    [
+      ["issueInsecureResources", ["3"]],
+      ["issueInsecureForms", ["1"]],
+    ]
+  );
 });

@@ -18,7 +18,7 @@ const PNG = Buffer.from(
 
 const EXPECTED = [
   "The page does not use HTTPS.",
-  "10 resource(s) (images, scripts, styles, frames…) load over HTTP.",
+  "10 resource(s) (images, scripts, styles, frames…) use HTTP addresses.",
   "2 form(s) send data over HTTP.",
   "2 link(s) point to HTTP pages.",
 ];

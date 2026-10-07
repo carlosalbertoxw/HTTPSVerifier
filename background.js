@@ -20,9 +20,14 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-function showNotification(title, message) {
-  const notificationId = `issue-${Date.now()}`;
-  chrome.notifications.create(notificationId, {
+// One notification per tab: a new one for the same tab replaces the previous
+// one, and closing the tab removes it.
+function notificationId(tabId) {
+  return `issue-${tabId}`;
+}
+
+function showNotification(tabId, title, message) {
+  chrome.notifications.create(notificationId(tabId), {
     type: "basic",
     iconUrl: "images/icon-48.png",
     title: title,
@@ -56,6 +61,7 @@ async function notifyOnce(tabId, url, issues) {
   // Only the origin: full URLs can carry sensitive query strings and are
   // visible to anyone looking at the screen.
   showNotification(
+    tabId,
     chrome.i18n.getMessage("notificationTitle", [new URL(url).origin]),
     issues
       .map(([messageKey, substitutions]) =>
@@ -66,6 +72,7 @@ async function notifyOnce(tabId, url, issues) {
 }
 
 chrome.tabs.onRemoved.addListener((tabId) => {
+  chrome.notifications.clear(notificationId(tabId));
   enqueue(() => chrome.storage.session.remove(LAST_NOTIFIED_PREFIX + tabId));
 });
 

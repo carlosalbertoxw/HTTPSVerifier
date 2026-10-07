@@ -16,6 +16,7 @@ function resetState() {
     local: { enableNotificationsURL: true, enableNotificationsLINKS: true },
     session: {},
     notifications: [],
+    cleared: [],
     injections: 0,
     frames: [],
   };
@@ -75,7 +76,8 @@ globalThis.chrome = {
     },
   },
   notifications: {
-    create: (id, options) => state.notifications.push(options),
+    create: (id, options) => state.notifications.push({ id, ...options }),
+    clear: (id) => state.cleared.push(id),
   },
   i18n: {
     getMessage: (key, substitutions = []) => [key, ...substitutions].join(" "),
@@ -166,6 +168,21 @@ test("tabs finishing at the same time are all notified", async () => {
   ]);
 });
 
+test("each tab has its own notification, removed when the tab closes", async () => {
+  await complete(1, "http://example.com/a");
+  await settle();
+  await complete(1, "http://example.com/b");
+  await complete(2, "http://example.com/a");
+  await settle();
+  assert.deepEqual(
+    state.notifications.map(({ id }) => id),
+    ["issue-1", "issue-1", "issue-2"]
+  );
+  listeners.onRemoved(1);
+  await settle();
+  assert.deepEqual(state.cleared, ["issue-1"]);
+});
+
 test("closing the tab resets the deduplication", async () => {
   await complete(1, "http://example.com/");
   await settle();
@@ -183,7 +200,7 @@ test("insecure resources are reported on an HTTPS page", async () => {
   await complete(1, url);
   await settle();
   assert.equal(state.injections, 1);
-  assert.equal(state.notifications[0].message, "issueInsecureResources 1");
+  assert.equal(state.notifications[0].message, "issueMixedResources 1");
 });
 
 test("a secure page is not notified", async () => {

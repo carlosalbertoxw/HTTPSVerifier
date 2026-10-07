@@ -62,8 +62,18 @@
     "description": "Résultat affiché lorsque la vérification manuelle a pu inspecter la page mais pas tous ses cadres."
   },
   "issueInsecureResources": {
-    "message": "$COUNT$ ressource(s) (images, scripts, styles, cadres…) chargée(s) en HTTP.",
-    "description": "Ligne de la notification lorsque des ressources chargées par la page (images, scripts, styles, cadres, médias) n’utilisent pas HTTPS.",
+    "message": "$COUNT$ ressource(s) (images, scripts, styles, cadres…) utilisent des adresses HTTP.",
+    "description": "Ligne de la notification lorsque la page fait référence à des ressources (images, scripts, styles, cadres, médias) avec des adresses http://.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "issueMixedResources": {
+    "message": "$COUNT$ ressource(s) (images, scripts, styles, cadres…) utilisent des adresses HTTP. Chrome les bloque ou tente de les charger en HTTPS.",
+    "description": "Comme issueInsecureResources, sur une page servie en HTTPS : Chrome y bloque ces ressources ou les passe en HTTPS (contenu mixte), elles sont donc référencées en HTTP sans forcément être chargées en HTTP.",
     "placeholders": {
       "count": {
         "content": "$1",

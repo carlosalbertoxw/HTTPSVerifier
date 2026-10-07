@@ -7,6 +7,16 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Changed
+- Insecure resources are reported as resources that "use HTTP addresses"
+  instead of resources that "load over HTTP". On an HTTPS page the line adds
+  that Chrome blocks them or tries to load them over HTTPS (mixed content), so
+  it no longer claims they were loaded insecurely. The store descriptions say
+  the same.
+- Each tab has a single notification: a new one for the same tab replaces the
+  previous one, and closing the tab removes it. Before, two notifications
+  created in the same millisecond could replace each other.
+
 ### Tooling
 - Reproducible build on every OS: `.gitattributes` forces LF line endings
   (on Windows with `core.autocrlf` the ZIP used to differ from the CI one).

@@ -62,8 +62,18 @@
     "description": "Result shown when the manual check could inspect the page but not all of its frames."
   },
   "issueInsecureResources": {
-    "message": "$COUNT$ resource(s) (images, scripts, styles, frames…) load over HTTP.",
-    "description": "Notification line shown when resources loaded by the page (images, scripts, styles, frames, media) are not served over HTTPS.",
+    "message": "$COUNT$ resource(s) (images, scripts, styles, frames…) use HTTP addresses.",
+    "description": "Notification line shown when the page references resources (images, scripts, styles, frames, media) with http:// addresses.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "issueMixedResources": {
+    "message": "$COUNT$ resource(s) (images, scripts, styles, frames…) use HTTP addresses. Chrome blocks them or tries to load them over HTTPS.",
+    "description": "Same as issueInsecureResources, on a page served over HTTPS: there Chrome blocks those resources or upgrades them to HTTPS (mixed content), so they are referenced over HTTP but not necessarily loaded over HTTP.",
     "placeholders": {
       "count": {
         "content": "$1",
