@@ -1,6 +1,6 @@
 ¿Sabes realmente si las páginas que visitas son seguras?
 
-Una página puede cargar por HTTPS y aun así incluir enlaces, imágenes, hojas de estilo o scripts servidos por HTTP inseguro: riesgos ocultos de los que el navegador rara vez te avisa. HTTPS Verifier vigila cada página que visitas y te avisa en el momento en que algo no está bien.
+Una página puede cargar por HTTPS y aun así apuntar sus enlaces, imágenes, hojas de estilo, scripts o formularios a direcciones HTTP inseguras. Chrome bloquea o pasa a HTTPS algunas por su cuenta, pero rara vez te dice cuáles. HTTPS Verifier vigila cada página que visitas y te avisa en el momento en que algo no está bien.
 
 POR QUÉ TE VA A ENCANTAR
 

@@ -1,6 +1,6 @@
 Do you really know if the pages you visit are secure?
 
-A page can load over HTTPS and still include links, images, stylesheets or scripts served over insecure HTTP — hidden risks the browser rarely warns you about. HTTPS Verifier keeps an eye on every page you visit and lets you know the moment something isn't right.
+A page can load over HTTPS and still point its links, images, stylesheets, scripts or forms to insecure HTTP addresses. Chrome blocks or upgrades some of them on its own, but it rarely tells you which ones. HTTPS Verifier keeps an eye on every page you visit and lets you know the moment something isn't right.
 
 WHY YOU'LL LOVE IT
 

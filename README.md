@@ -9,7 +9,7 @@ https://chrome.google.com/webstore/detail/https-verifier/ogfgecooebcghjojlklphjj
 The extension checks every page you visit and shows a desktop notification when:
 
 - The page itself is not served over HTTPS.
-- The page loads **resources** over insecure `http://`: images, scripts, stylesheets, frames, media, icons, fonts and anything loaded by scripts.
+- The page uses insecure `http://` addresses for **resources**: images, scripts, stylesheets, frames, media, icons, fonts and anything loaded by scripts. On an HTTPS page the notification adds that Chrome blocks those resources or tries to load them over HTTPS (mixed content), because they are referenced over HTTP but not necessarily loaded over HTTP.
 - **Forms** on the page send their data over `http://`.
 - **Links** on the page point to `http://` pages.
 
@@ -98,7 +98,7 @@ To try the extension in Chrome on a page with a known result:
 The page is served from `http://localhost:8080` and loads its resources from a second origin, `http://127.0.0.1:8081`, so they count as resources from another site. It covers images, `srcset`, scripts, a script-added image, stylesheets, a CSS `@import`, a video poster, an iframe from another site (with its own image and form), forms and links, plus cases that must **not** be counted. The expected result is shown at the top of the page:
 
 - The page does not use HTTPS.
-- 10 resource(s) (images, scripts, styles, frames…) load over HTTP.
+- 10 resource(s) (images, scripts, styles, frames…) use HTTP addresses.
 - 2 form(s) send data over HTTP.
 - 2 link(s) point to HTTP pages.
 

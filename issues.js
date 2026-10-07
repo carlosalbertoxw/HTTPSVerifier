@@ -16,9 +16,21 @@ export function describeIssues(inspection, { includePage }) {
     for (const [kind, messageKey] of COUNT_MESSAGES) {
       const count = inspection.insecureCounts[kind];
       if (count > 0) {
-        issues.push([messageKey, [String(count)]]);
+        issues.push([
+          resourceMessage(kind, messageKey, inspection),
+          [String(count)],
+        ]);
       }
     }
   }
   return issues;
+}
+
+// On an HTTPS page Chrome blocks HTTP resources (mixed content) or upgrades
+// them to HTTPS, so they are referenced over HTTP but not necessarily loaded
+// over HTTP: say so instead of alarming the user.
+function resourceMessage(kind, messageKey, inspection) {
+  return kind === "resources" && !inspection.pageInsecure
+    ? "issueMixedResources"
+    : messageKey;
 }
