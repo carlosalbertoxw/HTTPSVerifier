@@ -18,6 +18,9 @@ All notable changes to this project are documented here. The format is based on
   created in the same millisecond could replace each other.
 
 ### Tooling
+- End-to-end test (`npm run test:e2e`): loads the packaged files in Chrome for
+  Testing with Puppeteer and checks the notification and the manual check
+  against the test page. CI runs it as a separate, non-blocking job.
 - Reproducible build on every OS: `.gitattributes` forces LF line endings
   (on Windows with `core.autocrlf` the ZIP used to differ from the CI one).
 - GitHub releases get a signed build provenance attestation of the ZIP

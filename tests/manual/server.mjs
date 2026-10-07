@@ -4,10 +4,12 @@
 // The page is served from http://localhost:8080 and loads its resources from a
 // second origin, http://127.0.0.1:8081, so they count as cross-origin HTTP
 // resources (URLs of the page's own origin are skipped on HTTP pages). The
-// expected result is shown on the page itself.
+// expected result is shown on the page itself, and the e2e test
+// (tests/e2e/extension.e2e.mjs) checks the extension against it.
 import http from "node:http";
+import { pathToFileURL } from "node:url";
 
-const PAGE = "http://localhost:8080";
+export const PAGE = "http://localhost:8080";
 const ASSETS = "http://127.0.0.1:8081";
 
 // 1x1 transparent PNG.
@@ -16,7 +18,8 @@ const PNG = Buffer.from(
   "base64"
 );
 
-const EXPECTED = [
+// In English, the default locale (en/messages.json).
+export const EXPECTED = [
   "The page does not use HTTPS.",
   "10 resource(s) (images, scripts, styles, frames…) use HTTP addresses.",
   "2 form(s) send data over HTTP.",
@@ -131,12 +134,38 @@ function handler(req, res) {
   res.end(`${path}\n\nBack to the test page: ${PAGE}/\n`);
 }
 
-http.createServer(handler).listen(8080, "localhost");
-http.createServer(handler).listen(8081, "127.0.0.1");
-
-console.log(`Test page: ${PAGE}/  (resources from ${ASSETS})`);
-console.log("Expected result:");
-for (const line of EXPECTED) {
-  console.log(`  - ${line}`);
+// Starts both servers; resolves once they listen. Returns a function that
+// stops them.
+export async function startServers() {
+  const servers = [
+    [8080, "localhost"],
+    [8081, "127.0.0.1"],
+  ].map(
+    ([port, host]) =>
+      new Promise((resolve, reject) => {
+        const server = http.createServer(handler);
+        server.once("error", reject);
+        server.listen(port, host, () => resolve(server));
+      })
+  );
+  const started = await Promise.all(servers);
+  return () =>
+    Promise.all(
+      started.map((server) => new Promise((resolve) => server.close(resolve)))
+    );
 }
-console.log("Press Ctrl+C to stop.");
+
+// Only when run directly (npm run test-page), not when imported by the e2e
+// test.
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  await startServers();
+  console.log(`Test page: ${PAGE}/  (resources from ${ASSETS})`);
+  console.log("Expected result:");
+  for (const line of EXPECTED) {
+    console.log(`  - ${line}`);
+  }
+  console.log("Press Ctrl+C to stop.");
+}

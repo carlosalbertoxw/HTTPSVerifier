@@ -77,6 +77,7 @@ Requirements: Node.js 22.13 or 24+ (for the tooling only; the extension has no r
 npm run lint          # ESLint
 npm run format:check  # Prettier (npm run format to fix)
 npm test              # unit tests (node:test)
+npm run test:e2e      # loads the extension in Chrome for Testing (Puppeteer)
 npm run build         # dist/https-verifier-<version>.zip
 ```
 
