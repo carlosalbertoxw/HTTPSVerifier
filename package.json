@@ -14,12 +14,14 @@
     "format:check": "prettier --check .",
     "build": "node scripts/build.mjs",
     "screenshots": "node scripts/screenshots.mjs",
-    "test-page": "node tests/manual/server.mjs"
+    "test-page": "node tests/manual/server.mjs",
+    "test:e2e": "node --test tests/e2e/extension.e2e.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.11.0",
     "globals": "^17.13.0",
-    "prettier": "^3.9.9"
+    "prettier": "^3.9.9",
+    "puppeteer": "^25.12.0"
   }
 }

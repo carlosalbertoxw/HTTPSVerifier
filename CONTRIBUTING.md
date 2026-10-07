@@ -18,6 +18,7 @@ npm ci
 npm run lint
 npm run format  # Prettier; CI runs npm run format:check
 npm test
+npm run test:e2e  # Chrome for Testing via Puppeteer, against the test page
 npm run build   # creates dist/https-verifier-<version>.zip
 ```
 
@@ -25,7 +26,10 @@ To try the extension, load the project folder from `chrome://extensions` with
 **Developer mode** and **Load unpacked**, then run `npm run test-page` and
 open http://localhost:8080/: the page shows the result it must produce (see
 "Manual test page" in the README). Changes to what is detected must keep that
-page in sync.
+page in sync: `npm run test:e2e` loads the extension in Chrome for Testing and
+checks it against the result the page expects (`EXPECTED` in
+`tests/manual/server.mjs`). CI runs it as a separate job that does not block
+the merge.
 
 ## What a change needs
 

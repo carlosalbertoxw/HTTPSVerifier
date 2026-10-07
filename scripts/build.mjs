@@ -11,14 +11,14 @@ import {
   writeFileSync,
 } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { deflateRawSync } from "node:zlib";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 // Single source of truth for what ships. Tests, store assets, docs and
 // tooling stay out of the package.
-const PACKAGE_ENTRIES = [
+export const PACKAGE_ENTRIES = [
   "manifest.json",
   "background.js",
   "page-check.js",
@@ -31,7 +31,7 @@ const PACKAGE_ENTRIES = [
   "images",
 ];
 
-function listFiles(entry) {
+export function listFiles(entry) {
   const absolute = path.join(ROOT, entry);
   if (!existsSync(absolute)) {
     throw new Error(`Package entry not found: ${entry}`);
@@ -165,14 +165,21 @@ function createZip(files) {
   return Buffer.concat([...localParts, centralDirectory, end]);
 }
 
-const files = PACKAGE_ENTRIES.flatMap(listFiles);
-const manifest = checkReferences(files);
-const output = path.join(
-  ROOT,
-  "dist",
-  `https-verifier-${manifest.version}.zip`
-);
+// Only when run directly, not when imported by the e2e test (which loads the
+// same files into Chrome).
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  const files = PACKAGE_ENTRIES.flatMap(listFiles);
+  const manifest = checkReferences(files);
+  const output = path.join(
+    ROOT,
+    "dist",
+    `https-verifier-${manifest.version}.zip`
+  );
 
-mkdirSync(path.dirname(output), { recursive: true });
-writeFileSync(output, createZip(files));
-console.log(`${path.relative(ROOT, output)} (${files.length} files)`);
+  mkdirSync(path.dirname(output), { recursive: true });
+  writeFileSync(output, createZip(files));
+  console.log(`${path.relative(ROOT, output)} (${files.length} files)`);
+}
