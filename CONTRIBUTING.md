@@ -11,7 +11,7 @@ Thanks for your interest in HTTPS Verifier.
 
 ## Development
 
-Requirements: Node.js 20.19, 22.13 or 24+, and Chrome 102 or later.
+Requirements: Node.js 22.13 or 24+ (`.nvmrc`), and Chrome 102 or later.
 
 ```
 npm ci
@@ -58,4 +58,6 @@ page in sync.
 2. Bump `version` in **both** `manifest.json` and `package.json`.
 3. Commit, then tag and push: `git tag v1.4.0 && git push origin master v1.4.0`.
 4. CI checks that the tag matches the manifest and attaches the ZIP to a GitHub
-   release. Upload that ZIP to the Chrome Web Store (see the README).
+   release, with a build provenance attestation. Verify it with
+   `gh attestation verify` and upload that ZIP to the Chrome Web Store (see the
+   README).
