@@ -67,7 +67,7 @@ Translations live in the `_locales/<lang>/messages.json` files. To add a new lan
 
 ## Development
 
-Requirements: Node.js 20.19, 22.13 or 24+ (for the tooling only; the extension has no runtime dependencies).
+Requirements: Node.js 22.13 or 24+ (for the tooling only; the extension has no runtime dependencies). `.nvmrc` pins the version CI uses.
 
 1. Clone this repository and run `npm ci`.
 2. Open `chrome://extensions` in Chrome and enable **Developer mode**.
@@ -120,7 +120,13 @@ For HTTPS pages with mixed content, use the public pages of [badssl.com](https:/
 npm run build
 ```
 
-This creates `dist/https-verifier-<version>.zip` with `manifest.json` at the root and **only the files the extension needs at runtime** (the list is `PACKAGE_ENTRIES` in `scripts/build.mjs`). The build fails if a packaged file references another file that is not packaged. Pushing a `v<version>` tag also builds it in CI and attaches it to a GitHub release. To rehearse a release, push a tag with a suffix such as `v1.4.0-rc.1` (with `1.4.0` in the manifest): it is published as a pre-release that you can delete afterwards.
+This creates `dist/https-verifier-<version>.zip` with `manifest.json` at the root and **only the files the extension needs at runtime** (the list is `PACKAGE_ENTRIES` in `scripts/build.mjs`). The build fails if a packaged file references another file that is not packaged. Pushing a `v<version>` tag also builds it in CI and attaches it to a GitHub release, with a signed build provenance attestation. **Upload the ZIP of the GitHub release, not a local build**, and check where it came from first:
+
+```
+gh attestation verify https-verifier-<version>.zip --repo carlosalbertoxw/HTTPSVerifier
+```
+
+The build is reproducible: the same tag always produces the same ZIP, on any OS (`.gitattributes` forces LF line endings). To rehearse a release, push a tag with a suffix such as `v1.4.0-rc.1` (with `1.4.0` in the manifest): it is published as a pre-release that you can delete afterwards.
 
 Before packaging, make sure the `version` in `manifest.json` (and `package.json`) is **higher** than the one currently published, because the store rejects uploads with the same or a lower version. Tag every published version (`git tag v1.3.0`): the store has no rollback, so going back means republishing the code of an older tag with a higher version number.
 

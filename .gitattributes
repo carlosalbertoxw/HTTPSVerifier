@@ -1,0 +1,7 @@
+# LF everywhere, on every OS: the store ZIP is built from these files and must
+# be byte-identical to the one CI attaches to the GitHub release.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.zip binary

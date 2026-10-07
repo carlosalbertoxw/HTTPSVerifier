@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format is based on
 ## [Unreleased]
 
 ### Tooling
+- Reproducible build on every OS: `.gitattributes` forces LF line endings
+  (on Windows with `core.autocrlf` the ZIP used to differ from the CI one).
+- GitHub releases get a signed build provenance attestation of the ZIP
+  (`gh attestation verify`).
+- GitHub Actions pinned by commit SHA, without persisted credentials.
+- Node.js 20 (end of life) dropped from the supported versions, `.nvmrc`
+  added, and CI moved to Node.js 24.
+- Incident response steps for the maintainer in `SECURITY.md`.
 - Manual test page with a known expected result: `npm run test-page`, then
   open http://localhost:8080/ (see "Manual test page" in the README).
 - README section on known detection limitations, such as resources loaded by
