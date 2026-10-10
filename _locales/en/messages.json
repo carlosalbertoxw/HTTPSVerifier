@@ -61,6 +61,16 @@
     "message": "Some frames of the page could not be checked.",
     "description": "Result shown when the manual check could inspect the page but not all of its frames."
   },
+  "urlsTruncated": {
+    "message": "Very large page: only the first $COUNT$ addresses of each kind were checked.",
+    "description": "Note shown by the manual check when a frame had more addresses of one kind (resources, forms or links) than the limit, so only the first ones were checked.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5000"
+      }
+    }
+  },
   "issueInsecureResources": {
     "message": "$COUNT$ resource(s) (images, scripts, styles, frames…) use HTTP addresses.",
     "description": "Notification line shown when the page references resources (images, scripts, styles, frames, media) with http:// addresses.",

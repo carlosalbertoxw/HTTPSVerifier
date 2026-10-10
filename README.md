@@ -59,7 +59,7 @@ Translations live in the `_locales/<lang>/messages.json` files. To add a new lan
 | `settings.js` | Single source of truth for the settings keys and defaults. |
 | `popup.html` / `popup.js` | Settings popup and on-demand page check. |
 | `_locales/` | Translations (`chrome.i18n`). |
-| `tests/` | Unit tests (`node:test`). `tests/manual/` holds the manual test page (`npm run test-page`). |
+| `tests/` | Unit tests (`node:test`). `tests/e2e/` loads the extension in Chrome for Testing (`npm run test:e2e`); `tests/manual/` holds the manual test page (`npm run test-page`). |
 | `scripts/build.mjs` | Builds the Chrome Web Store ZIP. |
 | `scripts/screenshots.mjs` / `scripts/release-notes.mjs` | Store screenshots and GitHub release notes. |
 | `store-assets/` | Chrome Web Store screenshots and listing descriptions (not part of the packaged extension). |
@@ -77,6 +77,7 @@ Requirements: Node.js 22.13 or 24+ (for the tooling only; the extension has no r
 npm run lint          # ESLint
 npm run format:check  # Prettier (npm run format to fix)
 npm test              # unit tests (node:test)
+npm run test:coverage # unit tests with coverage (fails below 90 %)
 npm run test:e2e      # loads the extension in Chrome for Testing (Puppeteer)
 npm run build         # dist/https-verifier-<version>.zip
 ```
@@ -105,6 +106,8 @@ The page is served from `http://localhost:8080` and loads its resources from a s
 
 Check it both ways: the notification shown when the page loads, and **Check this page now** in the popup. Reloading the tab must not notify again; the "another URL" link on the page must.
 
+http://localhost:8080/large has 6,000 HTTP links and 4,000 HTTPS links. The popup must report 5,000 links and say that only the first 5,000 addresses of each kind were checked. The e2e test also logs how long the check of this page takes.
+
 For HTTPS pages with mixed content, use the public pages of [badssl.com](https://badssl.com/), for example https://mixed.badssl.com/ (image), https://mixed-script.badssl.com/ (script), https://mixed-form.badssl.com/ (form) and https://very.badssl.com/ (several kinds), and http://http.badssl.com/ for a page that is not served over HTTPS.
 
 ### Known limitations
@@ -112,6 +115,7 @@ For HTTPS pages with mixed content, use the public pages of [badssl.com](https:/
 - **Resources loaded by a stylesheet from another site** (its `@import` and `url()`) are not detected: Chrome leaves them out of the Resource Timing data that the extension reads, and they are not in the page's markup. The stylesheet itself is detected.
 - Chrome keeps only the first 250 Resource Timing entries of a page; resources loaded after that are detected only if they are in the page's markup.
 - An image used only as a CSS background is requested (and detected) only once Chrome renders it.
+- On very large pages, at most 5,000 addresses of each kind (resources, forms, links) are checked in each frame, so the check stays fast. The popup says when that limit was reached; the notification counts only what was checked. Addresses with a scheme other than `http:` (`https:`, `data:`, `mailto:`…) are discarded inside the page and do not count toward the limit.
 
 ## Publishing to the Chrome Web Store
 
@@ -121,7 +125,7 @@ For HTTPS pages with mixed content, use the public pages of [badssl.com](https:/
 npm run build
 ```
 
-This creates `dist/https-verifier-<version>.zip` with `manifest.json` at the root and **only the files the extension needs at runtime** (the list is `PACKAGE_ENTRIES` in `scripts/build.mjs`). The build fails if a packaged file references another file that is not packaged. Pushing a `v<version>` tag also builds it in CI and attaches it to a GitHub release, with a signed build provenance attestation. **Upload the ZIP of the GitHub release, not a local build**, and check where it came from first:
+This creates `dist/https-verifier-<version>.zip` with `manifest.json` at the root and **only the files the extension needs at runtime** (the list is `PACKAGE_ENTRIES` in `scripts/build.mjs`). The build fails if a packaged file references another file that is not packaged. Pushing a `v<version>` tag also builds it in CI and attaches it to a GitHub release, with a signed build provenance attestation. CI builds that ZIP in a job that installs no npm packages, so no dev dependency can change the files before they are packaged. **Upload the ZIP of the GitHub release, not a local build**, and check where it came from first:
 
 ```
 gh attestation verify https-verifier-<version>.zip --repo carlosalbertoxw/HTTPSVerifier
@@ -132,6 +136,8 @@ The build is reproducible: the same tag always produces the same ZIP, on any OS 
 Before packaging, make sure the `version` in `manifest.json` (and `package.json`) is **higher** than the one currently published, because the store rejects uploads with the same or a lower version. Tag every published version (`git tag v1.3.0`): the store has no rollback, so going back means republishing the code of an older tag with a higher version number.
 
 ### 2. Upload and fill in the listing
+
+The upload is manual on purpose. Publishing from CI would need Chrome Web Store API credentials stored as a GitHub secret, and anyone who obtained them (through a compromised workflow or dependency) could push a version to every user. Uploading by hand keeps that power in the Google account, and checking the attestation first confirms the ZIP is the one CI built from the tag.
 
 1. Open the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole). Publishing requires a developer account with the one-time $5 registration fee.
 2. Select the existing **HTTPS Verifier** item (or **New item** for a first publish) and upload the ZIP under **Package → Upload new package**.

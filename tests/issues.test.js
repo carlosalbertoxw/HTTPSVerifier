@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { describeIssues } from "../issues.js";
+import { MAX_URLS_PER_KIND } from "../insecure-url.js";
+import { describeIssues, describeResult } from "../issues.js";
 
 test("an insecure page is reported only when requested", () => {
   const inspection = { pageInsecure: true, insecureCounts: null };
@@ -50,5 +51,73 @@ test("resources on an HTTPS page say that Chrome blocks or upgrades them", () =>
       ["issueInsecureResources", ["3"]],
       ["issueInsecureForms", ["1"]],
     ]
+  );
+});
+
+const CHECKED = { resources: 0, forms: 0, links: 0 };
+
+test("the manual check says when a page cannot be checked", () => {
+  assert.deepEqual(describeResult(null), {
+    tone: "muted",
+    lines: [["checkNotPossible", []]],
+  });
+});
+
+test("only a complete check without issues reads as all HTTPS", () => {
+  const inspection = {
+    pageInsecure: false,
+    insecureCounts: CHECKED,
+    partial: false,
+    truncated: false,
+  };
+  assert.deepEqual(describeResult(inspection), {
+    tone: "ok",
+    lines: [["checkResultOk", []]],
+  });
+  // Any note turns "everything uses HTTPS" into a muted result.
+  for (const [change, note] of [
+    [{ insecureCounts: null }, ["resourcesNotChecked", []]],
+    [{ partial: true }, ["checkResultPartial", []]],
+    [{ truncated: true }, ["urlsTruncated", [String(MAX_URLS_PER_KIND)]]],
+  ]) {
+    assert.deepEqual(describeResult({ ...inspection, ...change }), {
+      tone: "muted",
+      lines: [note],
+    });
+  }
+});
+
+test("issues come first, followed by what could not be checked", () => {
+  assert.deepEqual(
+    describeResult({
+      pageInsecure: true,
+      insecureCounts: { ...CHECKED, links: 2 },
+      partial: true,
+      truncated: true,
+    }),
+    {
+      tone: "warn",
+      lines: [
+        ["issuePageNotHttps", []],
+        ["issueInsecureLinks", ["2"]],
+        ["framesNotChecked", []],
+        ["urlsTruncated", [String(MAX_URLS_PER_KIND)]],
+      ],
+    }
+  );
+  assert.deepEqual(
+    describeResult({
+      pageInsecure: true,
+      insecureCounts: null,
+      partial: false,
+      truncated: false,
+    }),
+    {
+      tone: "warn",
+      lines: [
+        ["issuePageNotHttps", []],
+        ["resourcesNotChecked", []],
+      ],
+    }
   );
 });

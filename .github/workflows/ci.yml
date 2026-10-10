@@ -11,12 +11,15 @@ permissions:
 
 # Actions are pinned by commit SHA (a tag can be moved); Dependabot keeps both
 # the SHA and the version comment up to date.
+#
+# The jobs that install the npm dev dependencies never build the package that
+# gets published: that code (ESLint, Prettier, Puppeteer and everything they
+# depend on) could otherwise change the extension files before they are
+# zipped. The published ZIP comes from the "package" job, which installs
+# nothing.
 jobs:
   check:
     runs-on: ubuntu-latest
-    env:
-      # Chrome for Testing is only needed by the e2e job.
-      PUPPETEER_SKIP_DOWNLOAD: "true"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -25,10 +28,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
+      # No install scripts: none of the tools needs one (Puppeteer's only
+      # downloads Chrome for Testing, which the e2e job installs explicitly).
+      - run: npm ci --ignore-scripts
       - run: npm run lint
       - run: npm run format:check
-      - run: npm test
+      - run: npm run test:coverage
       - run: npm audit --audit-level=high
       # v1.4.0 and its rehearsal tags (v1.4.0-rc.1) need manifest version 1.4.0
       # and a 1.4.0 section in the changelog.
@@ -40,7 +45,22 @@ jobs:
           echo "tag: $tag_version, manifest: $manifest_version"
           test "${tag_version%%-*}" = "$manifest_version"
           node scripts/release-notes.mjs "$GITHUB_REF_NAME" > /dev/null
+      # Only to fail this required check when the package cannot be built
+      # (e.g. a module missing from PACKAGE_ENTRIES). This ZIP is discarded.
       - run: npm run build
+
+  # Builds the ZIP that gets published, from a clean checkout and without
+  # installing any npm package: scripts/build.mjs uses only Node.js.
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+      - run: node scripts/build.mjs
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: extension-package
@@ -60,14 +80,13 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-      - run: npm ci
-      # Explicit, in case npm stops running Puppeteer's install script.
+      - run: npm ci --ignore-scripts
       - run: npx puppeteer browsers install chrome
       - run: npm run test:e2e
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: check
+    needs: [check, package]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -98,6 +117,11 @@ jobs:
             node scripts/release-notes.mjs "$GITHUB_REF_NAME"
             echo
             echo "Upload the attached ZIP to the Chrome Web Store."
+            echo
+            echo "The ZIP contains only this repository's own files (the list"
+            echo "is PACKAGE_ENTRIES in scripts/build.mjs): no third-party code"
+            echo "and no npm dependencies. It was built by the \"package\" job,"
+            echo "which installs no npm packages."
           } > release-notes.md
           gh release create "$GITHUB_REF_NAME" package/*.zip \
             --repo "$GITHUB_REPOSITORY" \
