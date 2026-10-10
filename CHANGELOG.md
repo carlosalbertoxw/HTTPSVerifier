@@ -7,6 +7,11 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-10-10
+
+The permissions are the same as in 1.4.0, so updating does not show any new
+permission warning.
+
 ### Changed
 - Insecure resources are reported as resources that "use HTTP addresses"
   instead of resources that "load over HTTP". On an HTTPS page the line adds
@@ -141,7 +146,8 @@ permission warning.
   or when links, images, stylesheets or scripts use `http://`, with a popup to
   enable each notification type.
 
-[Unreleased]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/carlosalbertoxw/HTTPSVerifier/compare/v1.0.1...v1.2.0
