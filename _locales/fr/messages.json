@@ -61,6 +61,16 @@
     "message": "Certains cadres de la page n'ont pas pu être vérifiés.",
     "description": "Résultat affiché lorsque la vérification manuelle a pu inspecter la page mais pas tous ses cadres."
   },
+  "urlsTruncated": {
+    "message": "Page très volumineuse : seules les $COUNT$ premières adresses de chaque type ont été vérifiées.",
+    "description": "Note de la vérification manuelle lorsqu'un cadre contenait plus d'adresses d'un type (ressources, formulaires ou liens) que la limite, donc seules les premières ont été vérifiées.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5000"
+      }
+    }
+  },
   "issueInsecureResources": {
     "message": "$COUNT$ ressource(s) (images, scripts, styles, cadres…) utilisent des adresses HTTP.",
     "description": "Ligne de la notification lorsque la page fait référence à des ressources (images, scripts, styles, cadres, médias) avec des adresses http://.",

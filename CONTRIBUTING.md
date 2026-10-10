@@ -18,6 +18,7 @@ npm ci
 npm run lint
 npm run format  # Prettier; CI runs npm run format:check
 npm test
+npm run test:coverage  # what CI runs: fails below 90 % coverage
 npm run test:e2e  # Chrome for Testing via Puppeteer, against the test page
 npm run build   # creates dist/https-verifier-<version>.zip
 ```
@@ -33,8 +34,8 @@ the merge.
 
 ## What a change needs
 
-- `npm run lint`, `npm run format:check` and `npm test` pass (CI runs them on
-  every pull request).
+- `npm run lint`, `npm run format:check` and `npm run test:coverage` pass (CI
+  runs them on every pull request).
 - Permissions in `manifest.json` do not change without a discussion first: any
   new permission disables the extension for existing users until they accept
   it (see "Permissions" in the README).
@@ -55,6 +56,10 @@ the merge.
 - One topic per commit, written in English, using
   [Conventional Commits](https://www.conventionalcommits.org/):
   `feat: detect insecure form actions`, `fix: ...`, `docs: ...`, `chore: ...`.
+- Code written with the help of AI tools is welcome, under the same rules as
+  any other: whoever submits the change has read and understood every line,
+  answers for it in the review, and has the right to submit it under the MIT
+  license. Credit the tool with a `Co-Authored-By:` trailer if you want to.
 
 ## Releasing (maintainer)
 

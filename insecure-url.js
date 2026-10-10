@@ -4,19 +4,30 @@
 // Kinds of URL collected from a page, in the order they are reported.
 export const URL_KINDS = ["resources", "forms", "links"];
 
-export function isInsecureUrl(value, baseUri) {
+// At most this many URLs of each kind are collected from each frame, so a
+// page with a huge number of links cannot make every check slow. Reaching it
+// is reported as "truncated".
+export const MAX_URLS_PER_KIND = 5000;
+
+// Returns the resolved URL when it is insecure (http:), otherwise null.
+function parseInsecureUrl(value, baseUri) {
   if (!value) {
-    return false;
+    return null;
   }
 
   try {
     // Resolving against the page base also catches protocol-relative URLs
     // ("//example.com/...") that would load over HTTP on an HTTP page.
-    return new URL(value, baseUri).protocol === "http:";
+    const url = new URL(value, baseUri);
+    return url.protocol === "http:" ? url : null;
   } catch (error) {
     // Not a resolvable URL.
-    return false;
+    return null;
   }
+}
+
+export function isInsecureUrl(value, baseUri) {
+  return parseInsecureUrl(value, baseUri) !== null;
 }
 
 // Extracts the URLs of a srcset attribute ("small.png 1x, large.png 2x").
@@ -80,10 +91,10 @@ export function collectInsecureUrls(
       continue;
     }
     for (const candidate of srcset ? parseSrcset(value) : [value]) {
-      if (!isInsecureUrl(candidate, baseUri)) {
+      const url = parseInsecureUrl(candidate, baseUri);
+      if (!url) {
         continue;
       }
-      const url = new URL(candidate, baseUri);
       if (documentInsecure && url.origin === documentOrigin) {
         continue;
       }

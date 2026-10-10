@@ -1,9 +1,14 @@
 version: 2
+# Updates are proposed only once a version has been public for 7 days:
+# malicious releases of npm packages are usually found and pulled within that
+# time.
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7
     groups:
       dev-dependencies:
         patterns: ["*"]
@@ -11,3 +16,5 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      default-days: 7

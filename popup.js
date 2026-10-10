@@ -1,4 +1,4 @@
-import { describeIssues } from "./issues.js";
+import { describeResult } from "./issues.js";
 import { inspectTab } from "./page-check.js";
 import { DEFAULT_SETTINGS } from "./settings.js";
 
@@ -45,47 +45,13 @@ checkButton.addEventListener("click", async () => {
   }
 });
 
-function localize([messageKey, substitutions]) {
-  return chrome.i18n.getMessage(messageKey, substitutions);
-}
-
 function renderResult(inspection) {
-  let tone;
-  let lines;
-
-  if (!inspection) {
-    tone = "muted";
-    lines = [chrome.i18n.getMessage("checkNotPossible")];
-  } else {
-    const issues = describeIssues(inspection, { includePage: true });
-    // "Could not check" is reported apart from the issues: it must never read
-    // as "everything uses HTTPS".
-    const notes = [];
-    if (inspection.insecureCounts === null) {
-      notes.push(["resourcesNotChecked", []]);
-    } else if (inspection.partial) {
-      notes.push([
-        issues.length > 0 ? "framesNotChecked" : "checkResultPartial",
-        [],
-      ]);
-    }
-
-    if (issues.length > 0) {
-      tone = "warn";
-    } else if (notes.length > 0) {
-      tone = "muted";
-    } else {
-      tone = "ok";
-      issues.push(["checkResultOk", []]);
-    }
-    lines = [...issues, ...notes].map(localize);
-  }
-
+  const { tone, lines } = describeResult(inspection);
   checkResult.className = tone;
   checkResult.textContent = "";
-  for (const line of lines) {
+  for (const [messageKey, substitutions] of lines) {
     const div = document.createElement("div");
-    div.textContent = line;
+    div.textContent = chrome.i18n.getMessage(messageKey, substitutions);
     checkResult.appendChild(div);
   }
   checkResult.hidden = false;

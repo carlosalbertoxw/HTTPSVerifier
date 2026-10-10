@@ -81,7 +81,7 @@ test("every message used by the code exists", () => {
     /data-i18n="(\w+)"/g,
     /__MSG_(\w+)__/g,
     // Message keys passed around as [key, substitutions] (not element ids).
-    /(?<!getElementById\(|id=)"((?:issue|check|frames|resources)[A-Z]\w*)"/g,
+    /(?<!getElementById\(|id=)"((?:issue|check|frames|resources|urls)[A-Z]\w*)"/g,
   ]) {
     for (const [, key] of sources.matchAll(pattern)) {
       used.add(key);

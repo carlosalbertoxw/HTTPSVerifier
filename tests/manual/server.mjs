@@ -92,6 +92,30 @@ const FRAME = `<!doctype html>
   <form action="${PAGE}/login" style="display:inline" onsubmit="return false"><button>a form</button></form> (form 2).
 </body>`;
 
+// A page with more insecure links than the extension collects per kind
+// (MAX_URLS_PER_KIND), plus HTTPS links that the page itself leaves out.
+// Open http://localhost:8080/large to try it by hand.
+export const LARGE_PAGE = { insecureLinks: 6000, secureLinks: 4000 };
+
+function largePage() {
+  const items = [];
+  for (let i = 0; i < LARGE_PAGE.insecureLinks; i++) {
+    items.push(`<li><a href="${ASSETS}/many/${i}">HTTP link ${i}</a></li>`);
+  }
+  for (let i = 0; i < LARGE_PAGE.secureLinks; i++) {
+    items.push(
+      `<li><a href="https://example.com/${i}">HTTPS link ${i}</a></li>`
+    );
+  }
+  return `<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>HTTPS Verifier large test page</title>
+<h1>${LARGE_PAGE.insecureLinks} HTTP links and ${LARGE_PAGE.secureLinks} HTTPS links</h1>
+<ul>${items.join("")}</ul>
+</html>`;
+}
+
 const ASSET_FILES = {
   "/d.js": [
     "text/javascript",
@@ -120,9 +144,9 @@ function handler(req, res) {
     res.writeHead(200, { "content-type": file[0] });
     return res.end(file[1]);
   }
-  if (path === "/") {
+  if (path === "/" || path === "/large") {
     res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    return res.end(INDEX);
+    return res.end(path === "/" ? INDEX : largePage());
   }
   if (path.endsWith(".png")) {
     res.writeHead(200, { "content-type": "image/png" });
@@ -163,6 +187,7 @@ if (
 ) {
   await startServers();
   console.log(`Test page: ${PAGE}/  (resources from ${ASSETS})`);
+  console.log(`Large page: ${PAGE}/large`);
   console.log("Expected result:");
   for (const line of EXPECTED) {
     console.log(`  - ${line}`);

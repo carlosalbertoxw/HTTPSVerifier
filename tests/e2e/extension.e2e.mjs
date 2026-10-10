@@ -12,7 +12,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import puppeteer from "puppeteer";
 import { listFiles, PACKAGE_ENTRIES } from "../../scripts/build.mjs";
-import { EXPECTED, PAGE, startServers } from "../manual/server.mjs";
+import { MAX_URLS_PER_KIND } from "../../insecure-url.js";
+import { EXPECTED, LARGE_PAGE, PAGE, startServers } from "../manual/server.mjs";
 
 const ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -117,29 +118,65 @@ test("loading the test page notifies the expected issues once", async () => {
   await page.close();
 });
 
+// The popup checks the active tab of its window. Opened as a tab it would be
+// that active tab itself, so run the same modules it uses against the tab
+// with the given URL instead. Returns the popup's tone and lines, and how long
+// the inspection took.
+async function manualCheck(url) {
+  const popup = await browser.newPage();
+  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+  const result = await popup.evaluate(async (url) => {
+    const { inspectTab } = await import("./page-check.js");
+    const { describeResult } = await import("./issues.js");
+    const [tab] = await chrome.tabs.query({ url });
+    const start = performance.now();
+    const inspection = await inspectTab(tab, { includeUrls: true });
+    const milliseconds = Math.round(performance.now() - start);
+    const { tone, lines } = describeResult(inspection);
+    return {
+      milliseconds,
+      tone,
+      lines: lines.map(([key, substitutions]) =>
+        chrome.i18n.getMessage(key, substitutions)
+      ),
+    };
+  }, url);
+  await popup.close();
+  return result;
+}
+
 test("the popup's manual check gives the expected result", async () => {
   const page = await browser.newPage();
   await page.goto(`${PAGE}/`, { waitUntil: "load" });
 
-  // The popup checks the active tab of its window. Opened as a tab it would
-  // be that active tab itself, so run the same modules it uses against the
-  // test page's tab instead.
-  const popup = await browser.newPage();
-  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-  const lines = await popup.evaluate(async (url) => {
-    const { inspectTab } = await import("./page-check.js");
-    const { describeIssues } = await import("./issues.js");
-    const [tab] = await chrome.tabs.query({ url });
-    const inspection = await inspectTab(tab, { includeUrls: true });
-    return {
-      partial: inspection.partial,
-      lines: describeIssues(inspection, { includePage: true }).map(
-        ([key, substitutions]) => chrome.i18n.getMessage(key, substitutions)
-      ),
-    };
-  }, `${PAGE}/`);
+  const { tone, lines } = await manualCheck(`${PAGE}/`);
+  assert.deepEqual({ tone, lines }, { tone: "warn", lines: EXPECTED });
+  await page.close();
+});
 
-  assert.deepEqual(lines, { partial: false, lines: EXPECTED });
-  await popup.close();
+test("a very large page is checked up to the limit", async (t) => {
+  const page = await browser.newPage();
+  await page.goto(`${PAGE}/large`, { waitUntil: "load" });
+  // Wait until the page has finished its own work (layout of the long
+  // list), so the time below is the extension's.
+  await page.evaluate(() => true);
+
+  const { milliseconds, tone, lines } = await manualCheck(`${PAGE}/large`);
+  t.diagnostic(
+    `${LARGE_PAGE.insecureLinks + LARGE_PAGE.secureLinks} links ` +
+      `inspected in ${milliseconds} ms`
+  );
+  assert.deepEqual(
+    { tone, lines },
+    {
+      tone: "warn",
+      lines: [
+        "The page does not use HTTPS.",
+        `${MAX_URLS_PER_KIND} link(s) point to HTTP pages.`,
+        `Very large page: only the first ${MAX_URLS_PER_KIND} addresses ` +
+          "of each kind were checked.",
+      ],
+    }
+  );
   await page.close();
 });

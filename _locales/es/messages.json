@@ -61,6 +61,16 @@
     "message": "No se pudieron revisar algunos marcos de la página.",
     "description": "Resultado cuando la revisión manual pudo inspeccionar la página pero no todos sus marcos."
   },
+  "urlsTruncated": {
+    "message": "Página muy grande: solo se revisaron las primeras $COUNT$ direcciones de cada tipo.",
+    "description": "Nota de la revisión manual cuando un marco tenía más direcciones de un tipo (recursos, formularios o enlaces) que el límite, así que solo se revisaron las primeras.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5000"
+      }
+    }
+  },
   "issueInsecureResources": {
     "message": "$COUNT$ recurso(s) (imágenes, scripts, estilos, marcos…) usan direcciones HTTP.",
     "description": "Línea de la notificación cuando la página hace referencia a recursos (imágenes, scripts, estilos, marcos, multimedia) con direcciones http://.",

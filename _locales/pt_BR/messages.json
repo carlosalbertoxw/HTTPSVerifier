@@ -61,6 +61,16 @@
     "message": "Não foi possível verificar alguns frames da página.",
     "description": "Resultado mostrado quando a verificação manual inspecionou a página, mas não todos os seus frames."
   },
+  "urlsTruncated": {
+    "message": "Página muito grande: só os primeiros $COUNT$ endereços de cada tipo foram verificados.",
+    "description": "Nota da verificação manual quando um frame tinha mais endereços de um tipo (recursos, formulários ou links) que o limite, então só os primeiros foram verificados.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5000"
+      }
+    }
+  },
   "issueInsecureResources": {
     "message": "$COUNT$ recurso(s) (imagens, scripts, estilos, frames…) usam endereços HTTP.",
     "description": "Linha da notificação quando a página faz referência a recursos (imagens, scripts, estilos, frames, mídia) com endereços http://.",

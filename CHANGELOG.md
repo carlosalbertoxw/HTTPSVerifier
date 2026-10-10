@@ -16,6 +16,19 @@ All notable changes to this project are documented here. The format is based on
 - Each tab has a single notification: a new one for the same tab replaces the
   previous one, and closing the tab removes it. Before, two notifications
   created in the same millisecond could replace each other.
+- Very large pages are checked faster: addresses that cannot be insecure
+  (`https:`, `data:`, `mailto:`…) are discarded inside the page, and at most
+  5,000 addresses of each kind are checked per frame. The popup says when that
+  limit is reached. A page with 100,000 links went from about 2 s to about
+  0.3 s.
+
+### Fixed
+- If the tab moved to another site while it was being checked, the
+  notification could show the first site's address with the second site's
+  results. Those results are now discarded and the new page is checked on its
+  own.
+- The debug log of a failed check could include the full URL of the page,
+  because Chrome quotes it in some error messages. Quoted text is now left out.
 
 ### Tooling
 - End-to-end test (`npm run test:e2e`): loads the packaged files in Chrome for
@@ -28,7 +41,20 @@ All notable changes to this project are documented here. The format is based on
 - GitHub Actions pinned by commit SHA, without persisted credentials.
 - Node.js 20 (end of life) dropped from the supported versions, `.nvmrc`
   added, and CI moved to Node.js 24.
-- Incident response steps for the maintainer in `SECURITY.md`.
+- Incident response steps and a threat model for the maintainer in
+  `SECURITY.md`.
+- The published ZIP is built in its own CI job, which installs no npm
+  packages, and the other jobs install the dev dependencies without running
+  their install scripts. Release notes say the ZIP contains no third-party
+  code.
+- Dependabot waits 7 days after a version is published before proposing it.
+- CodeQL also analyzes the GitHub Actions workflows.
+- CI runs the unit tests with coverage and fails below 90 %
+  (`npm run test:coverage`). The popup's result logic moved to `issues.js`
+  (`describeResult`) and is unit tested.
+- Large test page (http://localhost:8080/large) checked by the e2e test, which
+  also logs how long the check takes.
+- `CONTRIBUTING.md` states the rules for code written with AI tools.
 - Manual test page with a known expected result: `npm run test-page`, then
   open http://localhost:8080/ (see "Manual test page" in the README).
 - README section on known detection limitations, such as resources loaded by

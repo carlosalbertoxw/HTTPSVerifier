@@ -249,3 +249,14 @@ test("loading tabs and browser pages are ignored", async () => {
   assert.equal(state.injections, 0);
   assert.equal(state.notifications.length, 0);
 });
+
+test("a tab that moved to another site during the check is not notified", async () => {
+  // "complete" fired for example.com, but by the time the frames are read
+  // the tab shows another site: its results must not be reported under
+  // example.com. The next "complete" event checks the new page.
+  state.frames = pageWithInsecureScript("https://other.example/");
+  await complete(1, "https://example.com/");
+  await settle();
+  assert.equal(state.injections, 1);
+  assert.equal(state.notifications.length, 0);
+});
