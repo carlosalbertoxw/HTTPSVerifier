@@ -151,7 +151,8 @@ In the **Privacy** tab you must justify every permission. For this extension:
 - `scripting` + host permissions (`http://*/*`, `https://*/*`): needed to read the URLs of the resources, forms and links of the visited page to verify they use HTTPS.
 - `notifications`: needed to alert the user about insecure pages/resources.
 - `storage`: stores the user's notification preferences locally.
-- Data usage: the extension collects **no** user data, and everything runs locally. Link the [privacy policy](PRIVACY.md) as the privacy policy URL.
+- Data usage: the extension collects **no** user data, and everything runs locally.
+- Privacy policy URL: https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html. GitHub Pages publishes it from [`PRIVACY.md`](PRIVACY.md) on `master` (see `_config.yml`), so it updates with every change to that file. Do not use a `github.com/.../blob/...` link: GitHub answers automated requests for file pages with errors (429/503), and the store then rejects the item with "Privacy policy link is not reachable".
 
 ### 4. Submit for review
 

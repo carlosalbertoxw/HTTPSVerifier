@@ -1,0 +1,17 @@
+# GitHub Pages publishes the documents of this repository at
+# https://carlosalbertoxw.com/HTTPSVerifier/ (the account's custom domain).
+# The Chrome Web Store links to the privacy policy there:
+# https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html
+# The extension's code, tests and tooling stay out of the site.
+title: HTTPS Verifier
+exclude:
+  - "*.js"
+  - "*.json"
+  - "*.html"
+  - images/
+  - scripts/
+  - store-assets/
+  - tests/
+  - dist/
+  - node_modules/
+  - LICENSE
