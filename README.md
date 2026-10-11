@@ -28,13 +28,13 @@ The extension asks for access to all `http://` and `https://` sites at install t
 
 - **Why:** the main feature is checking every page you visit automatically, so almost every user would need that access anyway.
 - **Alternative considered (and reverted):** making the access optional (`optional_host_permissions`) and requesting it from the popup, with `activeTab` for the manual check. It avoids the install warning, but it added permission prompts, a "missing access" badge and notice, and it broke the automatic notifications for users who restrict the extension to specific sites from Chrome's site access menu.
-- **What the access is used for:** only to read the URLs of the page's resources, forms and links, locally. See the [privacy policy](PRIVACY.md).
+- **What the access is used for:** only to read the URLs of the page's resources, forms and links, locally. See the [privacy policy](https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html).
 
 You can still limit the extension to specific sites from Chrome's site access menu: the automatic checks then run only on those sites.
 
 If an injection into some frame of the page fails, the page itself is still checked and the popup says that some frames could not be checked, instead of reporting that everything uses HTTPS.
 
-Requires Chrome 102 or later. Everything runs locally: see the [privacy policy](PRIVACY.md).
+Requires Chrome 102 or later. Everything runs locally: see the [privacy policy](https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html).
 
 ## Internationalization
 

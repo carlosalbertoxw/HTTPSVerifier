@@ -11,6 +11,7 @@ All notable changes to this project are documented here. The format is based on
 - The privacy policy is published with GitHub Pages at
   https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html, a URL the Chrome Web
   Store can reach (GitHub file pages answer automated requests with errors).
+  The README, `CONTRIBUTING.md` and `SECURITY.md` link to that URL.
 
 ## [1.5.0] - 2026-10-10
 
