@@ -7,12 +7,6 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
-### Tooling
-- The privacy policy is published with GitHub Pages at
-  https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html, a URL the Chrome Web
-  Store can reach (GitHub file pages answer automated requests with errors).
-  The README, `CONTRIBUTING.md` and `SECURITY.md` link to that URL.
-
 ## [1.5.0] - 2026-10-10
 
 The permissions are the same as in 1.4.0, so updating does not show any new
@@ -70,6 +64,10 @@ permission warning.
   open http://localhost:8080/ (see "Manual test page" in the README).
 - README section on known detection limitations, such as resources loaded by
   stylesheets from another site.
+- The privacy policy is published with GitHub Pages at
+  https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html, a URL the Chrome Web
+  Store can reach (GitHub file pages answer automated requests with errors).
+  The README, `CONTRIBUTING.md` and `SECURITY.md` link to that URL.
 
 ## [1.4.0] - 2026-10-01
 
