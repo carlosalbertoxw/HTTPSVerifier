@@ -20,8 +20,9 @@ maintained in spare time, so please allow a few days.
 
 In scope: the extension code in this repository and its packaged releases.
 Examples: a page being able to run code in the extension context, data leaving
-the browser, or a permission used beyond what the README and
-[PRIVACY.md](PRIVACY.md) describe.
+the browser, or a permission used beyond what the README and the
+[privacy policy](https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html)
+describe.
 
 Out of scope: false positives or false negatives of the HTTPS checks. Report
 those as regular issues.

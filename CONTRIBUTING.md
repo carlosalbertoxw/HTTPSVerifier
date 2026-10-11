@@ -48,7 +48,8 @@ the merge.
   is not packaged.
 - User-visible changes are listed under `Unreleased` in
   [CHANGELOG.md](CHANGELOG.md).
-- No network requests, analytics or remote code: see [PRIVACY.md](PRIVACY.md).
+- No network requests, analytics or remote code: see the
+  [privacy policy](https://carlosalbertoxw.com/HTTPSVerifier/PRIVACY.html).
 
 ## Commits and branches
 
