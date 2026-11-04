@@ -18,3 +18,8 @@ updates:
       interval: monthly
     cooldown:
       default-days: 7
+    # One PR for all actions: the CodeQL init and analyze steps fail if they
+    # are on different versions.
+    groups:
+      github-actions:
+        patterns: ["*"]
