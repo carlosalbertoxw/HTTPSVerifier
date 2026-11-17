@@ -23,6 +23,6 @@
     "eslint": "^10.14.0",
     "globals": "^17.14.0",
     "prettier": "^3.9.10",
-    "puppeteer": "^25.16.0"
+    "puppeteer": "^25.17.0"
   }
 }
