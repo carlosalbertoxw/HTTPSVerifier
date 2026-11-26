@@ -7,6 +7,11 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
+### Tooling
+- Dependabot PRs with only patch or minor updates are merged automatically
+  (squash) once the required CI check passes; major updates are still reviewed
+  by hand. Merged branches are deleted automatically.
+
 ## [1.5.0] - 2026-10-10
 
 The permissions are the same as in 1.4.0, so updating does not show any new
