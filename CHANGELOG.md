@@ -9,8 +9,11 @@ All notable changes to this project are documented here. The format is based on
 
 ### Tooling
 - Dependabot PRs with only patch or minor updates are merged automatically
-  (squash) once the required CI check passes; major updates are still reviewed
-  by hand. Merged branches are deleted automatically.
+  (squash) once the required checks pass; major updates are still reviewed by
+  hand. Merged branches are deleted automatically.
+- Merging into `master` requires the CI `check` and `package` jobs and both
+  CodeQL analyses (`javascript-typescript` and `actions`) to pass. The `e2e`
+  job still reports without blocking.
 
 ## [1.5.0] - 2026-10-10
 
